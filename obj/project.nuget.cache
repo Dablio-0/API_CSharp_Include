@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "dgSpecHash": "HvFMMCImC8ZqaeOM3gLRljQr6s1HSJiy9iBbMQUIZCjh2pequgn6OVZqcxiH5YWUIwndz36MttgndYDgdPM9nQ==",
+  "success": false,
+  "projectFilePath": "C:\\Users\\lukin\\Projetos\\API_C_Sharp\\API_C_Sharp.csproj",
+  "expectedPackageFiles": [],
+  "logs": [
+    {
+      "code": "NU1100",
+      "level": "Error",
+      "message": "Não foi possível resolver 'Newtonsoft.Json (>= 13.0.3)' para 'net8.0'.",
+      "libraryId": "Newtonsoft.Json",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
+}
