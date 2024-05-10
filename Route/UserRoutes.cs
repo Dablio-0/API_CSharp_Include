@@ -9,7 +9,9 @@ namespace API_C_Sharp.Route
         public UserRoutes(Server app)
         {
             app.post("/login", UserController.login);
+
             app.post("/register", UserController.register);
+            app.put("/user/edit/{id:int}", UserController.update);
 
             app.get("/user/list", UserController.list);
             app.get("/user/{id:int}", UserController.getUserById);

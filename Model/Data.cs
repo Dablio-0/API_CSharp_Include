@@ -19,9 +19,9 @@ namespace API_C_Sharp.Model
 
         public void alimentaAi()
         {
-            this.addUser("Leandro", "leandromeirelles@gmail.com", "123");
-            this.addUser("Lucas", "lucas@gmail.com", "123");
-            this.addUser("Rogono", "rogono@gmail.com", "123");
+            this.addUser("Usuário 1", "usuario1@gmail.com", "123");
+            this.addUser("Usuário 2", "usuario2@gmail.com", "123");
+            this.addUser("Usuário 3", "usuario3@gmail.com", "123");
         }
 
         public int addUser(string name, string email, string password)
@@ -55,12 +55,24 @@ namespace API_C_Sharp.Model
 
         public User.User getUserById(int id)
         {
-            return usersList.Find(user => user.Id == id);
+            return usersList.Find(user => user.getId == id);
         }
 
         public List<User.User> getUsers()
         {
             return usersList;
         }
+
+        public Post.Post getPostById(int id)
+        {
+            return postsList.Find(post => post.getId == id);
+        }
+
+        public List<Post.Post> getPosts()
+        {
+            return postsList;
+        }
+
+
     }
 }

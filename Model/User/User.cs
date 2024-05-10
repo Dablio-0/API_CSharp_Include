@@ -4,16 +4,18 @@ namespace API_C_Sharp.Model.User
 {
     public class User
     {
+        /* Attributes */
         private int id;
         public string name;
         private string email;
         private string password;
-        public DateOnly BirthDate;
+        public DateOnly birthDate;
         private List<string> skills;
-        public string Jobs;
+        public List<string> jobs;
         private List<Notification> notifications;
-        public Boolean Status;
+        public Boolean status;
 
+        /* Constructor */
         public User(int id, string name, string email, string password)
         {
             this.id = id;
@@ -21,51 +23,80 @@ namespace API_C_Sharp.Model.User
             this.email = email;
             this.password = password;
 
-            skills = new();
-            notifications = new();
+            skills = new List<string>();
+            notifications = new List<Notification>();
         }
 
-        public string Skills { get; set; }
+        /* Gets & Sets */
 
-        public Boolean checkNotification(int item) { return true; }
-        public List<Notification> Notifications { get { return notifications; } }
+        public int getId { get { return id; } }
+
+        public int setId { set { id = value; } }
+
+        public string getName { get { return name; } }
+
+        public string setName { set { name = value; } }
+
+        public string getEmail { get { return email; } }
+
+        public string setEmail { set { email = value; } }
+
+        public string getPassword { get { return password; } }
+
+        public string setPassword { set { password = value; } }
+
+        public string getBirthDate { get { return birthDate.ToString("dd/MM/yyyy"); } }
+
+        public string setBirthDate { set { birthDate = DateOnly.Parse(value); } }
+
+        public List<string> getSkills { get { return skills; } }
+
+        public List<string> setSkills { set { skills = value; } }
+
+        public bool checkNotification(int item) { return true; }
+
+        public List<Notification> getNotifications { get { return notifications; } }
+
+        public List<Notification> setNotifications { set { notifications = value; } }
+
         public void addNotification(Notification notification) { }
 
-        public Boolean checkEmail(string email) { return email == this.email; }
+        public bool checkEmail(string email) { return email == this.email; }
 
-        public Boolean checkPassword(string password) { return password == this.password; }
-
-        public int Id { get { return id; } }
-
-        public string Email { get { return email; } }
-
-        public string Password { set { } }
+        public bool checkPassword(string password) { return password == this.password; }
 
         public JObject serialize()
         {
             JObject json = new JObject();
 
             json["id"] = id;
-            json["nome"] = name;
+            json["name"] = name;
             json["email"] = email;
             json["password"] = password;
-            json["birthDate"] = BirthDate.ToString("dd/MM/yyyy");
-            json["skills"] = skills.ToString();
-            json["jobs"] = Jobs;
+            json["birthDate"] = birthDate.ToString("dd/MM/yyyy");
 
-            JArray notificationList = new();
+            JArray skillList = new JArray();
+            foreach (string skill in skills)
+                skillList.Add(skill);
+
+            json["skills"] = skillList;
+
+            JArray jobsList = new JArray();
+            foreach (string job in jobs)
+                jobsList.Add(job);
+
+            json["jobs"] = jobsList;
+
+            JArray notificationList = new JArray();
             foreach (Notification notification in notifications)
                 notificationList.Add(notification.serialize());
 
             json["notifications"] = notificationList;
 
-            json["status"] = Status;
+            json["status"] = status;
 
             return json;
         }
-
-
-
     }
 }
 

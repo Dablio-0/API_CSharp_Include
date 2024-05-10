@@ -24,7 +24,6 @@ namespace API_C_Sharp
                 string userInput = Console.ReadLine();
                 if (userInput.ToLower() == "stop")
                 {
-
                     app.Close();
                     Console.WriteLine("Encerrar encerrado.");
                     break;
