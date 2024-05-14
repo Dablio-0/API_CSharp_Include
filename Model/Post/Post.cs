@@ -9,7 +9,7 @@ namespace API_C_Sharp.Model.Post
     public class Post
     {
         private int id;
-        private User.User author;
+        private int idAuthor;
         public string title;
         public string body;
         private DateTime date;
@@ -18,10 +18,10 @@ namespace API_C_Sharp.Model.Post
         private List<Comment> comments;
         private List<Image> images;
 
-        public Post(int id, User.User author, string title, string body, int likes)
+        public Post(int id, int idAuthor, string title, string body)
         {
             this.id = id;
-            this.author = author;
+            this.idAuthor = idAuthor;
             this.title = title;
             this.body = body;
             this.date = DateTime.Now;
@@ -55,7 +55,7 @@ namespace API_C_Sharp.Model.Post
         {
             JObject json = new JObject();
 
-            json["author"] = author.name;
+            json["author"] = idAuthor;
             json["title"] = title;
             json["body"] = body;
             json["date"] = date.ToString("dd/MM/yyyy");
