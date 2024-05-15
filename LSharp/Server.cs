@@ -28,38 +28,51 @@ namespace API_C_Sharp.LSharp
                 HttpListenerRequest request = context.Request;
                 HttpListenerResponse listenerResponse = context.Response;
 
-                Route route = _routeList.Find(route => route.check(request));
-
-                if (route == null)
+                if (request.HttpMethod == "OPTIONS")
                 {
-                    listenerResponse.StatusCode = (int)HttpStatusCode.NotFound;
+                    listenerResponse.Headers.Add("Access-Control-Allow-Origin", "*");
+                    listenerResponse.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+                    listenerResponse.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization");
+                    listenerResponse.StatusCode = 200;
                     listenerResponse.Close();
                 }
                 else
                 {
-                    Response response = route.make(request, _dataInstance);
+                    Route route = _routeList.Find(route => route.check(request));
 
-                    switch (response.type)
+                    if (route == null)
                     {
-                        case HTTP.Type.JSON:
-                            listenerResponse.ContentType = "application/json";
-                            break;
-                        case HTTP.Type.Text:
-                            listenerResponse.ContentType = "text/html";
-                            break;
-                        case HTTP.Type.ERROR:
-                            listenerResponse.ContentType = "application/json";
-                            break;
+                        listenerResponse.StatusCode = (int)HttpStatusCode.NotFound;
+                        listenerResponse.Close();
                     }
+                    else
+                    {
+                        Response response = route.make(request, _dataInstance);
 
-                    listenerResponse.StatusCode = (int)response.statusCode;
+                        switch (response.type)
+                        {
+                            case HTTP.Type.JSON:
+                                listenerResponse.ContentType = "application/json";
+                                break;
+                            case HTTP.Type.Text:
+                                listenerResponse.ContentType = "text/html";
+                                break;
+                            case HTTP.Type.ERROR:
+                                listenerResponse.ContentType = "application/json";
+                                break;
+                        }
 
-                    byte[] buffer = response.content;
-                    listenerResponse.ContentLength64 = buffer.Length;
+                        listenerResponse.StatusCode = (int)response.statusCode;
 
-                    Stream output = listenerResponse.OutputStream;
-                    output.Write(buffer, 0, buffer.Length);
-                    output.Close();
+                        byte[] buffer = response.content;
+
+                        listenerResponse.Headers.Add("Access-Control-Allow-Origin", "*");
+
+                        listenerResponse.ContentLength64 = buffer.Length;
+                        Stream output = listenerResponse.OutputStream;
+                        output.Write(buffer, 0, buffer.Length);
+                        output.Close();
+                    }
                 }
             }
         }

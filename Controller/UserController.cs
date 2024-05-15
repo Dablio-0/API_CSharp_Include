@@ -104,7 +104,7 @@ namespace API_C_Sharp.Controller
             user.setPassword = password;
             user.setBirthDate = birthDate;
             user.setSkills = skillsList;
-            user.jobs = jobsList;
+            user.setJobs = jobsList;
             return ResponseUtils.JsonSuccessResponse(user.serialize());
         }
 

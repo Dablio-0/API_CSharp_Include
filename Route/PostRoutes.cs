@@ -12,9 +12,10 @@ namespace API_C_Sharp.Route
     {
         public PostRoutes(Server app)
         {
-            app.post("/post", PostController.create);
+            app.post("/post/publish", PostController.create);
+            app.get("/feed", PostController.feed);
             app.get("/post/list", PostController.list);
-            app.get("/post/{id:int}", PostController.getPostById);
+            //app.get("/post/{id:int}", PostController.getPostById);
         }
     }
 }

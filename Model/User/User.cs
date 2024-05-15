@@ -11,7 +11,7 @@ namespace API_C_Sharp.Model.User
         private string password;
         public DateOnly birthDate;
         private List<string> skills;
-        public List<string> jobs;
+        private List<string> jobs;
         private List<Notification> notifications;
         public Boolean status;
 
@@ -24,6 +24,7 @@ namespace API_C_Sharp.Model.User
             this.password = password;
 
             skills = new List<string>();
+            jobs = new List<string>();
             notifications = new List<Notification>();
         }
 
@@ -52,6 +53,10 @@ namespace API_C_Sharp.Model.User
         public List<string> getSkills { get { return skills; } }
 
         public List<string> setSkills { set { skills = value; } }
+
+        public List<string> getJobs { get { return jobs; } }
+
+        public List<string> setJobs { set { jobs = value; } }
 
         public bool checkNotification(int item) { return true; }
 

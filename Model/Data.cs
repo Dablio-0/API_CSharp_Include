@@ -43,6 +43,11 @@ namespace API_C_Sharp.Model
             this.currentUser = userId;
         }
 
+        public int getCurrentUser()
+        {
+            return this.currentUser;
+        }
+
         public void logout()
         {
             this.currentUser = -1;
@@ -61,6 +66,15 @@ namespace API_C_Sharp.Model
         public List<User.User> getUsers()
         {
             return usersList;
+        }
+
+        public int addPost(int idAuthor, string title, string body)
+        {
+            int ID = postsList.Count();
+
+            postsList.Add(new Post.Post(ID, idAuthor, title, body));
+
+            return ID;
         }
 
         public Post.Post getPostById(int id)

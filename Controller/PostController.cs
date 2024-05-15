@@ -12,14 +12,29 @@ namespace API_C_Sharp.Controller
 
         public static Response create(Request request, Data data)
         {
+            int idAuthor = data.getCurrentUser();
             string title = (string)request.body.GetValue("title");
             string body = (string)request.body.GetValue("body");
-            DateTime date = DateTime.Now;
-            DateTime updateDate = DateTime.Now;
-            int likes = 0;
 
+            int postId = data.addPost(idAuthor, title, body);
 
-            return ResponseUtils.JsonSuccessResponse(JObject.Parse("[]"));
+            return ResponseUtils.JsonSuccessResponse(JObject.Parse("{id:" + postId + "}"));
+        }
+
+        public static Response feed(Request request, Data data)
+        {
+            Console.WriteLine(data.getPosts());
+
+            JArray postList = new();
+            foreach (Post post in data.getPosts())
+                postList.Add(post.serialize());
+
+            if (postList.Count == 0)
+                return ResponseUtils.JsonSuccessResponse(JObject.Parse("[]"));
+
+            postList.Reverse();
+
+            return ResponseUtils.JsonSuccessResponse(postList);
         }
 
         public static Response list(Request request, Data data)
@@ -32,7 +47,6 @@ namespace API_C_Sharp.Controller
 
             if (postList.Count == 0)
                 return ResponseUtils.JsonSuccessResponse(JObject.Parse("[]"));
-
 
             return ResponseUtils.JsonSuccessResponse(postList);
         }
