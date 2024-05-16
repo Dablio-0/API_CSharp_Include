@@ -1,3 +1,3 @@
 # API_CSharp_Include
  
-Criar readme depois para explica o projeto
+Criar readme depois para explica o projeto e suas características
