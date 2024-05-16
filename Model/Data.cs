@@ -77,6 +77,11 @@ namespace API_C_Sharp.Model
             return ID;
         }
 
+        public void deletePost(int id)
+        {
+            postsList.Remove(getPostById(id));
+        }
+
         public Post.Post getPostById(int id)
         {
             return postsList.Find(post => post.getId == id);

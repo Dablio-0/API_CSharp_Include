@@ -38,6 +38,5 @@ namespace API_C_Sharp.Model.User
 
             return json;
         }
-
     }
 }

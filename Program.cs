@@ -14,6 +14,7 @@ namespace API_C_Sharp
             Server app = new Server(8080);
 
             new UserRoutes(app);
+            new PostRoutes(app);
 
             app.Start(dataInstance);
 
