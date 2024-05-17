@@ -8,6 +8,7 @@ namespace API_C_Sharp.Model
         private List<User.User> usersList;
         private List<Friendship> friendshipsList;
         private List<Post.Post> postsList;
+        private List<Comment.Comment> commentList;
         private int currentUser = -1;
 
         public Data()
@@ -15,13 +16,14 @@ namespace API_C_Sharp.Model
             usersList = new();
             friendshipsList = new();
             postsList = new();
+            commentList = new();
         }
 
         public void alimentaAi()
         {
-            this.addUser("Usuário 1", "usuario1@gmail.com", "123");
-            this.addUser("Usuário 2", "usuario2@gmail.com", "123");
-            this.addUser("Usuário 3", "usuario3@gmail.com", "123");
+            this.addUser("Usuï¿½rio 1", "usuario1@gmail.com", "123");
+            this.addUser("Usuï¿½rio 2", "usuario2@gmail.com", "123");
+            this.addUser("Usuï¿½rio 3", "usuario3@gmail.com", "123");
         }
 
         public int addUser(string name, string email, string password)
@@ -92,6 +94,28 @@ namespace API_C_Sharp.Model
             return postsList;
         }
 
+        public int addComment(int idAuthor, int idPost, string text)
+        {
+            int ID = commentList.Count();
+
+            commentList.Add(new Comment.Comment(ID, idAuthor, idPost, text));
+
+            return ID;
+        }
+
+        public List<Comment.Comment> getAllComments()
+        {
+            return commentList;
+        }
+
+        public List<Comment.Comment> getCommentsByPost(int idPost)
+        {
+            List<Comment.Comment> commentlistByPost = new();
+            commentList = this->getAllComments();
+            commentList.Find(comment => comment.getIdPost = idPost);
+
+            return commentListByPost;
+        }
 
     }
 }
