@@ -8,16 +8,19 @@ namespace API_C_Sharp.Model.Post
 {
     public class Post
     {
+        #region Attributes
         private int id;
         private int idAuthor;
         public string title;
         public string body;
         private DateTime date;
-        public DateTime updateDate;
+        private DateTime updateDate;
         private int likes;
         private List<Comment> comments;
-        private List<Image> images;
+        private List<string> images;
+        #endregion
 
+        #region Constructor
         public Post(int id, int idAuthor, string title, string body)
         {
             this.id = id;
@@ -30,27 +33,49 @@ namespace API_C_Sharp.Model.Post
             this.comments = new();
             this.images = new();
         }
+        #endregion
 
-        public void addLike() { }
-
-        public void removeLike() { }
-
-        public List<Comment> Comment
-        {
-            get { return []; }
-            set { }
-        }
-
-        public List<JObject> serializeComments() { return []; }
-
+        #region Gets e Sets
         public int getId { get { return id; } }
 
         public int setId { set { id = value; } }
 
+        public int getIdAuthor { get { return idAuthor; } }
+
+        public int setIdAuthor { set { idAuthor = value; } }
+
         public string[] image { get { return []; } set { } }
 
-        public DateTime Date { get { return date; } }
+        public DateTime getDate { get { return date; } }
 
+        public DateTime getUpdateDate { get { return updateDate; } }
+
+        public DateTime setUpdateDate { set { updateDate = value; } }
+
+        public int getLikes { get { return likes; } }
+
+        public List<Comment> getCommentList { get { return comments; } }
+
+        public List<Comment> setCommentList { set { comments = value; } }
+
+        public List<string> getImageList { get { return images; } }
+
+        public List<string> setImageList { set { images = value; } }
+        #endregion
+
+        #region Methods
+        public void addLike()
+        {
+            this.likes++;
+        }
+
+        public void removeLike()
+        {
+            this.likes--;
+        }
+        #endregion
+
+        #region Serialization for JSON
         public JObject serialize()
         {
             JObject json = new JObject();
@@ -68,43 +93,14 @@ namespace API_C_Sharp.Model.Post
 
             json["comments"] = commentsList;
 
+            JArray imagesList = new();
+            foreach (string image in images)
+                imagesList.Add(image);
 
-            // verificar sobre questão de armazenar imagens com base64
-            //JArray imagesList = new();
-            //foreach(Image image in images)
-            //    imagesList.Add(image.serialize());
-
-            //json["images"] = imagesList;
+            json["images"] = imagesList;
 
             return json;
         }
+        #endregion
     }
-
-    class Image()
-    {
-
-    }
-
-    public class Comment
-    {
-        private User.User author;
-        public string text;
-        private DateTime date;
-        public DateTime updateDate;
-
-        public DateTime Date { get { return date; } }
-
-        public JObject serialize()
-        {
-            JObject json = new();
-
-            json["author"] = author.name;
-            json["text"] = text;
-            json["date"] = date.ToString("dd/MM/yyyy");
-            json["updateDate"] = updateDate.ToString("dd/MM/yyyy");
-
-            return json;
-        }
-    }
-
 }

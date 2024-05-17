@@ -15,6 +15,9 @@ namespace API_C_Sharp.Route
             app.post("/post/publish", PostController.create);
             app.get("/feed", PostController.feed);
             app.get("/post/list", PostController.list);
+
+            // CRUD
+            app.put("/post/edit", PostController.update);
             //app.get("/post/{id:int}", PostController.getPostById);
         }
     }

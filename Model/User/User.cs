@@ -4,7 +4,7 @@ namespace API_C_Sharp.Model.User
 {
     public class User
     {
-        /* Attributes */
+        #region Attributes
         private int id;
         public string name;
         private string email;
@@ -12,10 +12,12 @@ namespace API_C_Sharp.Model.User
         public DateOnly birthDate;
         private List<string> skills;
         private List<string> jobs;
+        private List<User> users;
         private List<Notification> notifications;
         public Boolean status;
+        #endregion
 
-        /* Constructor */
+        #region Constructor
         public User(int id, string name, string email, string password)
         {
             this.id = id;
@@ -26,10 +28,11 @@ namespace API_C_Sharp.Model.User
             skills = new List<string>();
             jobs = new List<string>();
             notifications = new List<Notification>();
+            users = new List<User>();
         }
+        #endregion
 
-        /* Gets & Sets */
-
+        #region Gets e Sets
         public int getId { get { return id; } }
 
         public int setId { set { id = value; } }
@@ -58,18 +61,26 @@ namespace API_C_Sharp.Model.User
 
         public List<string> setJobs { set { jobs = value; } }
 
-        public bool checkNotification(int item) { return true; }
-
         public List<Notification> getNotifications { get { return notifications; } }
 
         public List<Notification> setNotifications { set { notifications = value; } }
+
+        public List<User> getFriends { get { return users; } }
+
+        public List<User> setFriends { set { users = value; } }
+        #endregion
+
+        #region Methods
+        public bool checkNotification(int item) { return true; }
 
         public void addNotification(Notification notification) { }
 
         public bool checkEmail(string email) { return email == this.email; }
 
         public bool checkPassword(string password) { return password == this.password; }
+        #endregion
 
+        #region Serialization for JSON
         public JObject serialize()
         {
             JObject json = new JObject();
@@ -98,10 +109,17 @@ namespace API_C_Sharp.Model.User
 
             json["notifications"] = notificationList;
 
+            JArray friendsList = new JArray();
+            foreach (User user in users)
+                friendsList.Add(user.serialize());
+
+            json["friends"] = friendsList;
+
             json["status"] = status;
 
             return json;
         }
+        #endregion
     }
 }
 
