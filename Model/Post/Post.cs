@@ -73,6 +73,11 @@ namespace API_C_Sharp.Model.Post
         {
             this.likes--;
         }
+
+        public User.User getUser(Data data)
+        {
+            return data.getUserById(idAuthor);
+        }
         #endregion
 
         #region Serialization for JSON
@@ -80,6 +85,7 @@ namespace API_C_Sharp.Model.Post
         {
             JObject json = new JObject();
 
+            json["id"] = id;
             json["author"] = idAuthor;
             json["title"] = title;
             json["body"] = body;
