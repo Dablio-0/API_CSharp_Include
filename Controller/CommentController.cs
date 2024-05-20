@@ -10,11 +10,23 @@ namespace API_C_Sharp.Controller
 {
     public class CommentController
     {
-        public static Response create(Request request, Data data)
+        #region create comment
+        public static void create(Request request, Data data)
         {
-            // Create a new comment
-            return new Response();
+            int idAuthor = data.getCurrentUser();
+            int idPost = (int)request.parameters.GetValue("idPost"); //o id do post será recebido via query params
+            string text = (string)request.text.GetValue("text");
+
+            int commentId = data.addComment(idAuthor, idPost, text);
+
+            return ResponseUtils.JsonSuccessResponse(JObject.Parse("{" +
+                "id:" + commentId + ", " +
+                "idAuthor: " + idAuthor + ", " +
+                "idPost: " + idPost + ", " +
+                "text: " + text + ", " +
+            " }"));        
         }
+        #endregion
 
         public static Response update(Request request, Data data)
         {

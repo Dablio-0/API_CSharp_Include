@@ -23,9 +23,9 @@ namespace API_C_Sharp.Model
 
         public void alimentaAi()
         {
-            this.addUser("Usuário 1", "usuario1@gmail.com", "123");
-            this.addUser("Usuário 2", "usuario2@gmail.com", "123");
-            this.addUser("Usuário 3", "usuario3@gmail.com", "123");
+            this.addUser("Usuï¿½rio 1", "usuario1@gmail.com", "123");
+            this.addUser("Usuï¿½rio 2", "usuario2@gmail.com", "123");
+            this.addUser("Usuï¿½rio 3", "usuario3@gmail.com", "123");
         }
 
         #region Data Users Methods
@@ -124,18 +124,29 @@ namespace API_C_Sharp.Model
             return post;
         }
         #endregion
-
+          
         #region Data Comment Methods
-        public List<Comment> getComments()
+        public int addComment(int idAuthor, int idPost, string text)
         {
-            return commentsList;
+            int ID = commentList.Count();
+
+            commentList.Add(new Comment.Comment(ID, idAuthor, idPost, text));
+
+            return ID;
         }
 
-        public void addComment(int idAuthorComment, string text)
+        public List<Comment.Comment> getAllComments()
         {
-            int ID = commentsList.Count();
+            return commentList;
+        }
 
-            commentsList.Add(new Comment(ID, idAuthorComment, text));
+        public List<Comment.Comment> getCommentsByPost(int idPost)
+        {
+            List<Comment.Comment> commentlistByPost = new();
+            commentList = this->getAllComments();
+            commentList.Find(comment => comment.getIdPost = idPost);
+
+            return commentListByPost;
         }
 
         public void deleteComment(int id)
