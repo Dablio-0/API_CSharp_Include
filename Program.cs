@@ -15,6 +15,7 @@ namespace API_C_Sharp
 
             new UserRoutes(app);
             new PostRoutes(app);
+            new CommentRoutes(app);
 
             app.Start(dataInstance);
 

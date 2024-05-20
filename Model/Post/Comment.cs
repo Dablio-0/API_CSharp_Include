@@ -13,13 +13,15 @@ namespace API_C_Sharp.Model.Post
         private int id;
         private int idAuthorComment;
         public string text;
+        public int likes;
         private DateTime date;
         public DateTime updateDate;
         #endregion
 
         #region Constructor
-        public Comment(int idAuthorComment, string text)
+        public Comment(int id, int idAuthorComment, string text)
         {
+            this.id = id;
             this.idAuthorComment = idAuthorComment;
             this.text = text;
             this.date = DateTime.Now;
@@ -36,11 +38,25 @@ namespace API_C_Sharp.Model.Post
 
         public string setText { set { text = value; } }
 
+        public int getLikes { get { return likes; } }
+
         public DateTime getDate { get { return date; } }
 
         public DateTime getUpdateDate { get { return updateDate; } }
 
         public DateTime setUpdateDate { set { updateDate = value; } }
+        #endregion
+
+        #region Methods
+        public void addLike()
+        {
+            this.likes++;
+        }
+
+        public void removeLike()
+        {
+            this.likes--;
+        }
         #endregion
 
         #region Serialization for JSON

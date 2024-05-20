@@ -12,13 +12,19 @@ namespace API_C_Sharp.Route
     {
         public PostRoutes(Server app)
         {
+            #region CRUD Post Routes
             app.post("/post/publish", PostController.create);
-            app.get("/feed", PostController.feed);
-            app.get("/post/list", PostController.list);
+            app.put("/post/{idPost:int}/edit", PostController.update);
+            app.delete("/post/{idPost:int}/delete", PostController.delete);
+            #endregion
 
-            // CRUD
-            app.put("/post/edit", PostController.update);
-            //app.get("/post/{id:int}", PostController.getPostById);
+            #region List Comments (Feed)
+            app.get("/feed", PostController.feed);
+            #endregion
+
+            #region Like Post
+            app.post("/feed/post/{idPost:int}/like", PostController.like);
+            #endregion
         }
     }
 }

@@ -29,9 +29,7 @@ namespace API_C_Sharp.Controller
             Post post = data.getPostById((int)request.routeParans["id"]);
 
             if (post == null)
-            {
                 return ResponseUtils.NotFound("Post não encontrado.");
-            }
 
             string title = (string)request.body.GetValue("title");
             string body = (string)request.body.GetValue("body");
@@ -82,30 +80,14 @@ namespace API_C_Sharp.Controller
                 postList.Add(post.serialize());
 
             if (postList.Count == 0)
-                return ResponseUtils.JsonSuccessResponse(JObject.Parse("[]"));
+                return ResponseUtils.Conflict("Não há posts.");
 
-            // inverter a lista de post para fazer o feed com as ultimas postagens feitas
+            // Reorder the list of posts to show the most recent first
             JArray postListInverted = new();
             for (int i = postList.Count - 1; i >= 0; i--)
                 postListInverted.Add(postList[i]);
 
             return ResponseUtils.JsonSuccessResponse(postListInverted);
-        }
-        #endregion
-
-        #region All Post
-        public static Response list(Request request, Data data)
-        {
-            Console.WriteLine(data.getPosts());
-
-            JArray postList = new();
-            foreach (Post post in data.getPosts())
-                postList.Add(post.serialize());
-
-            if (postList.Count == 0)
-                return ResponseUtils.JsonSuccessResponse(JObject.Parse("[]"));
-
-            return ResponseUtils.JsonSuccessResponse(postList);
         }
         #endregion
 
@@ -121,7 +103,7 @@ namespace API_C_Sharp.Controller
         }
         #endregion
 
-        #region List of Comments of a Post
+        #region List of Comments by Post
         public static Response getPostCommentList(Request request, Data data)
         {
             Post post = data.getPostById((int)request.routeParans["id"]);
@@ -129,15 +111,48 @@ namespace API_C_Sharp.Controller
             if (post == null)
                 return ResponseUtils.NotFound("Post não encontrado.");
 
-            JArray commentList = new();
+            JArray commentListByPost = new();
             foreach (Comment comment in post.getCommentList)
-                commentList.Add(comment.serialize());
+                commentListByPost.Add(comment.serialize());
 
-            if (commentList.Count == 0)
+            if (commentListByPost.Count == 0)
                 return ResponseUtils.NotFound("Não há comentários nesse post.");
 
+            return ResponseUtils.JsonSuccessResponse(commentListByPost);
+        }
+        #endregion
 
-            return ResponseUtils.JsonSuccessResponse(JObject.Parse("[]"));
+        #region Interaction
+        public static Response like(Request request, Data data)
+        {
+            Post post = data.getPostById((int)request.routeParans.GetValue("idPost"));
+
+            if (post == null)
+                return ResponseUtils.NotFound("Post não encontrado.");
+
+            User user = data.getUserById(data.getCurrentUser());
+
+            if (user == null)
+                return ResponseUtils.Unauthorized("Usuário não encontrado.");
+
+            string statusLikeString = (string)request.body.GetValue("statusLike");
+            bool statusLike = false;
+            bool.TryParse(statusLikeString, out statusLike);
+
+            if (statusLike)
+            {
+                data.addPostLikeByUser((int)request.routeParans["idPost"]);
+                return ResponseUtils.JsonSuccessResponse((JObject.Parse("{" +
+                    "idPost:" + post.getId + ", " +
+                    "likes:" + post.getLikes + "}")));
+            }
+            else
+            {
+                data.removePostLikeByUser((int)request.routeParans["idPost"]);
+                return ResponseUtils.JsonSuccessResponse((JObject.Parse("{" +
+                    "idPost:" + post.getId + ", " +
+                    "likes:" + post.getLikes + "}")));
+            }
         }
         #endregion
     }
