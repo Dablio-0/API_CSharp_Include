@@ -1,5 +1,7 @@
 
+using API_C_Sharp.Model.Post;
 using API_C_Sharp.Model.User;
+using System.Security.Cryptography.X509Certificates;
 
 namespace API_C_Sharp.Model
 {
@@ -8,7 +10,7 @@ namespace API_C_Sharp.Model
         private List<User.User> usersList;
         private List<Friendship> friendshipsList;
         private List<Post.Post> postsList;
-        private List<Comment.Comment> commentList;
+        private List<Comment> commentsList;
         private int currentUser = -1;
 
         public Data()
@@ -16,7 +18,7 @@ namespace API_C_Sharp.Model
             usersList = new();
             friendshipsList = new();
             postsList = new();
-            commentList = new();
+            commentsList = new();
         }
 
         public void alimentaAi()
@@ -24,6 +26,27 @@ namespace API_C_Sharp.Model
             this.addUser("Usu�rio 1", "usuario1@gmail.com", "123");
             this.addUser("Usu�rio 2", "usuario2@gmail.com", "123");
             this.addUser("Usu�rio 3", "usuario3@gmail.com", "123");
+        }
+
+        #region Data Users Methods
+        public List<User.User> getUsers()
+        {
+            return usersList;
+        }
+
+        public User.User getUserByLogin(string email)
+        {
+            return usersList.Find(user => user.checkEmail(email));
+        }
+
+        public User.User getUserById(int id)
+        {
+            return usersList.Find(user => user.getId == id);
+        }
+
+        public int getCurrentUser()
+        {
+            return this.currentUser;
         }
 
         public int addUser(string name, string email, string password)
@@ -45,29 +68,32 @@ namespace API_C_Sharp.Model
             this.currentUser = userId;
         }
 
-        public int getCurrentUser()
-        {
-            return this.currentUser;
-        }
-
         public void logout()
         {
             this.currentUser = -1;
         }
+        #endregion
 
-        public User.User getUserByLogin(string email)
+        #region Data Post Methods
+        public List<Post.Post> getPosts()
         {
-            return usersList.Find(user => user.checkEmail(email));
+            return postsList;
         }
 
-        public User.User getUserById(int id)
+        public Post.Post getPostById(int id)
         {
-            return usersList.Find(user => user.getId == id);
+            return postsList.Find(post => post.getId == id);
         }
 
-        public List<User.User> getUsers()
+        public List<Post.Post> getListPostByUser(int id)
         {
-            return usersList;
+            List<Post.Post> posts = new();
+
+            foreach (Post.Post post in postsList)
+                if (post.getIdAuthor == id)
+                    posts.Add(post);
+
+            return posts;
         }
 
         public int addPost(int idAuthor, string title, string body)
@@ -84,16 +110,22 @@ namespace API_C_Sharp.Model
             postsList.Remove(getPostById(id));
         }
 
-        public Post.Post getPostById(int id)
+        public Post.Post addPostLikeByUser(int id)
         {
-            return postsList.Find(post => post.getId == id);
+            Post.Post post = getPostById(id);
+            post.addLike();
+            return post;
         }
 
-        public List<Post.Post> getPosts()
+        public Post.Post removePostLikeByUser(int id)
         {
-            return postsList;
+            Post.Post post = getPostById(id);
+            post.removeLike();
+            return post;
         }
-
+        #endregion
+          
+        #region Data Comment Methods
         public int addComment(int idAuthor, int idPost, string text)
         {
             int ID = commentList.Count();
@@ -117,5 +149,29 @@ namespace API_C_Sharp.Model
             return commentListByPost;
         }
 
+        public void deleteComment(int id)
+        {
+            commentsList.Remove(getCommentById(id));
+        }
+
+        public Comment getCommentById(int id)
+        {
+            return commentsList.Find(comment => comment.getId == id);
+        }
+
+        public Comment addCommentLikeByUser(int id)
+        {
+            Comment comment = getCommentById(id);
+            comment.addLike();
+            return comment;
+        }
+
+        public Comment remvoveCommentLikeByUser(int id)
+        {
+            Comment comment = getCommentById(id);
+            comment.removeLike();
+            return comment;
+        }
+        #endregion
     }
 }
