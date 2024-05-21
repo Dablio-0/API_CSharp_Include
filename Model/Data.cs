@@ -124,7 +124,7 @@ namespace API_C_Sharp.Model
             return post;
         }
         #endregion
-          
+
         #region Data Comment Methods
         public int addComment(int idAuthor, int idPost, string text)
         {
@@ -144,7 +144,7 @@ namespace API_C_Sharp.Model
         {
             List<Comment> commentsListByPost = new();
             commentsList = this.getAllComments();
-            commentsList.Find(comment => comment.getIdPost == idPost);
+            commentsList.FindAll(comment => comment.getIdPost == idPost);
 
             return commentsListByPost;
         }
