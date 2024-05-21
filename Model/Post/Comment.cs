@@ -12,6 +12,7 @@ namespace API_C_Sharp.Model.Post
         #region Attributes
         private int id;
         private int idAuthorComment;
+        private int idPost;
         public string text;
         public int likes;
         private DateTime date;
@@ -19,10 +20,11 @@ namespace API_C_Sharp.Model.Post
         #endregion
 
         #region Constructor
-        public Comment(int id, int idAuthorComment, string text)
+        public Comment(int id, int idAuthorComment, int idPost,string text)
         {
             this.id = id;
             this.idAuthorComment = idAuthorComment;
+            this.idPost = idPost;
             this.text = text;
             this.date = DateTime.Now;
             this.updateDate = DateTime.Now;
@@ -33,6 +35,10 @@ namespace API_C_Sharp.Model.Post
         public int getId { get { return id; } }
 
         public int getIdAuthorComment { get { return idAuthorComment; } }
+
+        public int getIdPost { get { return idPost; } }
+
+        public int setIdPost { set { idPost = value; } }
 
         public string getText() { return text; }
 

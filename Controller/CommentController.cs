@@ -14,8 +14,8 @@ namespace API_C_Sharp.Controller
         public static void create(Request request, Data data)
         {
             int idAuthor = data.getCurrentUser();
-            int idPost = (int)request.parameters.GetValue("idPost"); //o id do post será recebido via query params
-            string text = (string)request.text.GetValue("text");
+            int idPost = (int)request.parameters.GetValue("idPost");
+            string text = (string)request.body.GetValue("text");
 
             int commentId = data.addComment(idAuthor, idPost, text);
 

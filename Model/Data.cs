@@ -128,25 +128,25 @@ namespace API_C_Sharp.Model
         #region Data Comment Methods
         public int addComment(int idAuthor, int idPost, string text)
         {
-            int ID = commentList.Count();
+            int ID = commentsList.Count();
 
-            commentList.Add(new Comment.Comment(ID, idAuthor, idPost, text));
+            commentsList.Add(new Comment(ID, idAuthor, idPost, text));
 
             return ID;
         }
 
-        public List<Comment.Comment> getAllComments()
+        public List<Comment> getAllComments()
         {
-            return commentList;
+            return commentsList;
         }
 
-        public List<Comment.Comment> getCommentsByPost(int idPost)
+        public List<Comment> getCommentsByPost(int idPost)
         {
-            List<Comment.Comment> commentlistByPost = new();
-            commentList = this->getAllComments();
-            commentList.Find(comment => comment.getIdPost = idPost);
+            List<Comment> commentsListByPost = new();
+            commentsList = this.getAllComments();
+            commentsList.Find(comment => comment.getIdPost == idPost);
 
-            return commentListByPost;
+            return commentsListByPost;
         }
 
         public void deleteComment(int id)
