@@ -141,10 +141,6 @@ namespace API_C_Sharp.Controller
 
             if (statusLike)
             {
-                // Verificação se post.getLikesIdUser é nulo
-                if (post.getLikesIdUser == null)
-                    return ResponseUtils.NotFound("A lista de likes do post é nula.");
-
                 if (post.getLikesIdUser.Contains(user.getId))
                     return ResponseUtils.Conflict("Você já curtiu esse post.");
 
@@ -157,8 +153,9 @@ namespace API_C_Sharp.Controller
             }
             else
             {
-                if (post.getLikesIdUser == null)
-                    return ResponseUtils.NotFound("A lista de likes do post é nula.");
+                if (!post.getLikesIdUser.Contains(user.getId))
+                    return ResponseUtils.Conflict("Não é possível tirar o like duas vezes ou você não deu like ainda.");
+
 
                 data.removePostLikeByUser((int)request.routeParans["idPost"]);
                 post.getLikesIdUser.Remove(user.getId);

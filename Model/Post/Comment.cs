@@ -18,7 +18,6 @@ namespace API_C_Sharp.Model.Post
         public int likes;
         private DateTime date;
         public DateTime updateDate;
-        // array para salvar os ids de usuário que deram like no post
         private List<int> likesIdUser;
         #endregion
 
@@ -31,6 +30,7 @@ namespace API_C_Sharp.Model.Post
             this.text = text;
             this.date = DateTime.Now;
             this.updateDate = DateTime.Now;
+            this.likesIdUser = new();
         }
         #endregion
 

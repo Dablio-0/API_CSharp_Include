@@ -148,7 +148,10 @@ namespace API_C_Sharp.Controller
             }
             else
             {
-                data.removePostLikeByUser((int)request.routeParans["idPost"]);
+                if (!comment.getLikesIdUser.Contains(user.getId))
+                    return ResponseUtils.Conflict("Não é possível tirar o like duas vezes ou você não deu like ainda.");
+
+                data.removeCommentLikeByUser((int)request.routeParans["idPost"]);
                 comment.getLikesIdUser.Remove(user.getId);
 
                 return ResponseUtils.JsonSuccessResponse((JObject.Parse("{" +

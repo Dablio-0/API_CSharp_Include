@@ -33,6 +33,7 @@ namespace API_C_Sharp.Model.Post
             this.likes = 0;
             this.comments = new();
             this.images = new();
+            this.likesIdUser = new();
         }
         #endregion
 

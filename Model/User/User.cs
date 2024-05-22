@@ -9,6 +9,7 @@ namespace API_C_Sharp.Model.User
         public string name;
         private string email;
         private string password;
+        private string imageIconProfile;
         public DateOnly birthDate;
         private List<string> skills;
         private List<string> jobs;
@@ -48,6 +49,10 @@ namespace API_C_Sharp.Model.User
         public string getPassword { get { return password; } }
 
         public string setPassword { set { password = value; } }
+
+        public string getImageIconProfile { get { return imageIconProfile; } }
+
+        public string setImageIconProfile { set { imageIconProfile = value; } }
 
         public string getBirthDate { get { return birthDate.ToString("dd/MM/yyyy"); } }
 
@@ -89,6 +94,7 @@ namespace API_C_Sharp.Model.User
             json["name"] = name;
             json["email"] = email;
             json["password"] = password;
+            json["imageIconProfile"] = imageIconProfile;
             json["birthDate"] = birthDate.ToString("dd/MM/yyyy");
 
             JArray skillList = new JArray();
