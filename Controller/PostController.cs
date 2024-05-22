@@ -141,19 +141,34 @@ namespace API_C_Sharp.Controller
 
             if (statusLike)
             {
+                // Verificação se post.getLikesIdUser é nulo
+                if (post.getLikesIdUser == null)
+                    return ResponseUtils.NotFound("A lista de likes do post é nula.");
+
+                if (post.getLikesIdUser.Contains(user.getId))
+                    return ResponseUtils.Conflict("Você já curtiu esse post.");
+
                 data.addPostLikeByUser((int)request.routeParans["idPost"]);
-                return ResponseUtils.JsonSuccessResponse((JObject.Parse("{" +
-                    "idPost:" + post.getId + ", " +
-                    "likes:" + post.getLikes + "}")));
+                post.getLikesIdUser.Add(user.getId);
+
+                return ResponseUtils.JsonSuccessResponse(JObject.Parse("{" +
+                    "\"idPost\":" + post.getId + ", " +
+                    "\"likes\":" + post.getLikes + "}"));
             }
             else
             {
+                if (post.getLikesIdUser == null)
+                    return ResponseUtils.NotFound("A lista de likes do post é nula.");
+
                 data.removePostLikeByUser((int)request.routeParans["idPost"]);
-                return ResponseUtils.JsonSuccessResponse((JObject.Parse("{" +
-                    "idPost:" + post.getId + ", " +
-                    "likes:" + post.getLikes + "}")));
+                post.getLikesIdUser.Remove(user.getId);
+
+                return ResponseUtils.JsonSuccessResponse(JObject.Parse("{" +
+                    "\"idPost\":" + post.getId + ", " +
+                    "\"likes\":" + post.getLikes + "}"));
             }
         }
+
         #endregion
     }
 }

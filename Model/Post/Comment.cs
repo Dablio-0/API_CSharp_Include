@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace API_C_Sharp.Model.Post
@@ -17,10 +18,12 @@ namespace API_C_Sharp.Model.Post
         public int likes;
         private DateTime date;
         public DateTime updateDate;
+        // array para salvar os ids de usuário que deram like no post
+        private List<int> likesIdUser;
         #endregion
 
         #region Constructor
-        public Comment(int id, int idAuthorComment, int idPost,string text)
+        public Comment(int id, int idAuthorComment, int idPost, string text)
         {
             this.id = id;
             this.idAuthorComment = idAuthorComment;
@@ -51,6 +54,10 @@ namespace API_C_Sharp.Model.Post
         public DateTime getUpdateDate { get { return updateDate; } }
 
         public DateTime setUpdateDate { set { updateDate = value; } }
+
+        public List<int> getLikesIdUser { get { return likesIdUser; } }
+
+        public List<int> setLikesIdUser { set { likesIdUser = value; } }
         #endregion
 
         #region Methods
@@ -69,11 +76,19 @@ namespace API_C_Sharp.Model.Post
         public JObject serialize()
         {
             JObject json = new();
-
-            json["authorComment"] = idAuthorComment;
+            json["id"] = id;
+            json["idAuthorComment"] = idAuthorComment;
+            json["idPost"] = idPost;
             json["text"] = text;
+            json["likes"] = likes;
             json["date"] = date.ToString("dd/MM/yyyy");
             json["updateDate"] = updateDate.ToString("dd/MM/yyyy");
+
+            JArray likesIdUser = new();
+            foreach (int id in likesIdUser)
+                likesIdUser.Add(id);
+
+            json["likesIdUser"] = likesIdUser;
 
             return json;
         }

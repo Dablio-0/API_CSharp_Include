@@ -166,7 +166,7 @@ namespace API_C_Sharp.Model
             return comment;
         }
 
-        public Comment remvoveCommentLikeByUser(int id)
+        public Comment removeCommentLikeByUser(int id)
         {
             Comment comment = getCommentById(id);
             comment.removeLike();

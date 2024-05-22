@@ -19,6 +19,12 @@ namespace API_C_Sharp.Controller
 
             int commentId = data.addComment(idAuthor, idPost, text);
 
+            Comment commentCreated = data.getCommentById(commentId);
+
+            Post post = data.getPostById(idPost);
+
+            post.getCommentList.Add(commentCreated);
+
             return ResponseUtils.JsonSuccessResponse(JObject.Parse("{" +
                 "id:" + commentId + ", " +
                 "idAuthor: " + idAuthor + ", " +
@@ -112,8 +118,44 @@ namespace API_C_Sharp.Controller
         public static Response like(Request request, Data data)
         {
             Post post = data.addPostLikeByUser((int)request.routeParans["idPost"]);
+
+            if (post == null)
+                return ResponseUtils.NotFound("Post não encontrado.");
+
             Comment comment = data.getCommentById((int)request.routeParans["idComment"]);
-            return new Response();
+
+            if (comment == null)
+                return ResponseUtils.NotFound("Comentário não encontrado.");
+
+            User user = data.getUserById(data.getCurrentUser());
+
+            string statusLikeString = (string)request.body.GetValue("statusLike");
+            bool statusLike = false;
+            bool.TryParse(statusLikeString, out statusLike);
+
+            if (statusLike)
+            {
+                if (comment.getLikesIdUser.Contains(user.getId))
+                    return ResponseUtils.Conflict("Você já curtiu esse comentário.");
+
+                data.addCommentLikeByUser((int)request.routeParans["idPost"]);
+                comment.getLikesIdUser.Add(user.getId);
+
+                return ResponseUtils.JsonSuccessResponse((JObject.Parse("{" +
+                    "idPost:" + post.getId + ", " +
+                    "idComment:" + comment.getId + ", " +
+                    "likes:" + comment.getLikes + "}")));
+            }
+            else
+            {
+                data.removePostLikeByUser((int)request.routeParans["idPost"]);
+                comment.getLikesIdUser.Remove(user.getId);
+
+                return ResponseUtils.JsonSuccessResponse((JObject.Parse("{" +
+                    "idPost:" + post.getId + ", " +
+                    "idComment:" + comment.getId + ", " +
+                    "likes:" + comment.getLikes + "}")));
+            }
         }
     }
 }

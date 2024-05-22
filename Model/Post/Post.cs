@@ -18,6 +18,7 @@ namespace API_C_Sharp.Model.Post
         private int likes;
         private List<Comment> comments;
         private List<string> images;
+        private List<int> likesIdUser;
         #endregion
 
         #region Constructor
@@ -61,6 +62,10 @@ namespace API_C_Sharp.Model.Post
         public List<string> getImageList { get { return images; } }
 
         public List<string> setImageList { set { images = value; } }
+
+        public List<int> getLikesIdUser { get { return likesIdUser; } }
+
+        public List<int> setLikesIdUser { set { likesIdUser = value; } }
         #endregion
 
         #region Methods
@@ -104,6 +109,12 @@ namespace API_C_Sharp.Model.Post
                 imagesList.Add(image);
 
             json["images"] = imagesList;
+
+            JArray likesIdUserList = new();
+            foreach (int id in likesIdUser)
+                likesIdUserList.Add(id);
+
+            json["likesIdUser"] = likesIdUserList;
 
             return json;
         }
