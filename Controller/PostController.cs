@@ -14,6 +14,10 @@ namespace API_C_Sharp.Controller
         public static Response create(Request request, Data data)
         {
             int idAuthor = data.getCurrentUser();
+
+            if (idAuthor == -1)
+                return ResponseUtils.Unauthorized("Não há usuários criados.");
+
             string title = (string)request.body.GetValue("title");
             string body = (string)request.body.GetValue("body");
 

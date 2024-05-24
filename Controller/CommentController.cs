@@ -14,7 +14,15 @@ namespace API_C_Sharp.Controller
         public static Response create(Request request, Data data)
         {
             int idAuthor = data.getCurrentUser();
-            int idPost = (int)request.routeParans.GetValue("idPost");
+
+            if (idAuthor == -1)
+                return ResponseUtils.Unauthorized("Não há usuários criados.");
+
+            int idPost = data.getPostById((int)request.routeParans["idPost"]).getId;
+
+            if (idPost == null)
+                return ResponseUtils.NotFound("Post não encontrado.");
+
             string text = (string)request.body.GetValue("text");
 
             int commentId = data.addComment(idAuthor, idPost, text);
