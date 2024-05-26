@@ -96,7 +96,7 @@ namespace API_C_Sharp.Model
             return posts;
         }
 
-        public int addPost(int idAuthor, string title, string body)
+        public int addPost(int idAuthor, string title, BodyContent body)
         {
             int ID = postsList.Count();
 
@@ -126,11 +126,11 @@ namespace API_C_Sharp.Model
         #endregion
 
         #region Data Comment Methods
-        public int addComment(int idAuthor, int idPost, string text)
+        public int addComment(int idAuthor, int idPost, BodyCommentContent bodyComment)
         {
             int ID = commentsList.Count();
 
-            commentsList.Add(new Comment(ID, idAuthor, idPost, text));
+            commentsList.Add(new Comment(ID, idAuthor, idPost, bodyComment));
 
             return ID;
         }

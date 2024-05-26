@@ -12,7 +12,7 @@ namespace API_C_Sharp.Model.Post
         private int id;
         private int idAuthor;
         public string title;
-        public string body;
+        public BodyContent body;
         private DateTime date;
         private DateTime updateDate;
         private int likes;
@@ -22,7 +22,7 @@ namespace API_C_Sharp.Model.Post
         #endregion
 
         #region Constructor
-        public Post(int id, int idAuthor, string title, string body)
+        public Post(int id, int idAuthor, string title, BodyContent body)
         {
             this.id = id;
             this.idAuthor = idAuthor;
@@ -94,7 +94,22 @@ namespace API_C_Sharp.Model.Post
             json["id"] = id;
             json["author"] = idAuthor;
             json["title"] = title;
-            json["body"] = body;
+
+            //XElement bodyElement = new XElement("body");
+            //foreach (PropertyInfo property in body.GetType().GetProperties())
+            //    bodyElement.Add(new XElement(property.Name, property.GetValue(body)));
+
+            //json["body"] = bodyElement.ToString();
+
+
+            /* Body Element */
+            JObject bodyJson = new();
+            bodyJson["text"] = body.text;
+            bodyJson["code"] = body.code;
+            bodyJson["language"] = body.language;
+            bodyJson["image"] = body.image;
+            json["body"] = bodyJson;
+
             json["date"] = date.ToString("dd/MM/yyyy");
             json["updateDate"] = updateDate.ToString("dd/MM/yyyy");
             json["likes"] = likes;

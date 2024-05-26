@@ -23,9 +23,15 @@ namespace API_C_Sharp.Controller
             if (idPost == null)
                 return ResponseUtils.NotFound("Post não encontrado.");
 
-            string text = (string)request.body.GetValue("text");
+            JObject bodyCommentJson = (JObject)request.body.GetValue("body");
+            BodyCommentContent bodyComment = new(
+                (string)bodyCommentJson.GetValue("text"),
+                (string)bodyCommentJson.GetValue("code"),
+                (string)bodyCommentJson.GetValue("language"),
+                (string)bodyCommentJson.GetValue("image")
+            );
 
-            int commentId = data.addComment(idAuthor, idPost, text);
+            int commentId = data.addComment(idAuthor, idPost, bodyComment);
 
             Comment commentCreated = data.getCommentById(commentId);
 
@@ -57,14 +63,20 @@ namespace API_C_Sharp.Controller
             {
                 if (c.getId == comment.getId)
                 {
-                    string text = request.body.GetValue("text").ToString();
-                    comment.text = text;
+                    JObject bodyCommentJson = (JObject)request.body.GetValue("body");
+                    BodyCommentContent bodyComment = new(
+                        (string)bodyCommentJson.GetValue("text"),
+                        (string)bodyCommentJson.GetValue("code"),
+                        (string)bodyCommentJson.GetValue("language"),
+                        (string)bodyCommentJson.GetValue("image")
+                    );
+
 
                     return ResponseUtils.JsonSuccessResponse(JObject.Parse("{" +
                                                "id:" + comment.getId + ", " +
                                                "idAuthor: " + comment.getIdAuthorComment + ", " +
                                                "idPost: " + comment.getIdPost + ", " +
-                                               "text: " + comment.text + ", " +
+                                               "text: " + comment.bodyComment.serialize() + ", " +
                                                " }"));
                 }
             }
@@ -93,7 +105,7 @@ namespace API_C_Sharp.Controller
                                         "id:" + comment.getId + ", " +
                                         "idAuthor: " + comment.getIdAuthorComment + ", " +
                                         "idPost: " + comment.getIdPost + ", " +
-                                        "text: " + comment.text + ", " +
+                                        "text: " + comment.bodyComment.serialize() + ", " +
                                         " }"));
                 }
             }

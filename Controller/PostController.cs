@@ -19,7 +19,14 @@ namespace API_C_Sharp.Controller
                 return ResponseUtils.Unauthorized("Não há usuários criados.");
 
             string title = (string)request.body.GetValue("title");
-            string body = (string)request.body.GetValue("body");
+
+            JObject bodyJson = (JObject)request.body.GetValue("body");
+            BodyContent body = new(
+                (string)bodyJson.GetValue("text"),
+                (string)bodyJson.GetValue("code"),
+                (string)bodyJson.GetValue("language"),
+                (string)bodyJson.GetValue("image")
+            );
 
             int postId = data.addPost(idAuthor, title, body);
 
@@ -36,7 +43,15 @@ namespace API_C_Sharp.Controller
                 return ResponseUtils.NotFound("Post não encontrado.");
 
             string title = (string)request.body.GetValue("title");
-            string body = (string)request.body.GetValue("body");
+
+            JObject bodyJson = (JObject)request.body.GetValue("body");
+            BodyContent body = new(
+                (string)bodyJson.GetValue("text"),
+                (string)bodyJson.GetValue("code"),
+                (string)bodyJson.GetValue("language"),
+                (string)bodyJson.GetValue("image")
+            );
+
 
             JArray images = (JArray)request.body.GetValue("images");
             List<string> imagesList = new();
@@ -53,7 +68,7 @@ namespace API_C_Sharp.Controller
                 "id:" + post.getId + ", " +
                 "idAuthor: " + post.getIdAuthor + ", " +
                 "title: " + post.title + ", " +
-                "body: " + post.body + ", " +
+                "body: " + post.body.serialize() + ", " +
                 "date: " + post.getDate + ", " +
                 "updateDate: " + post.getUpdateDate + ", " +
                 " }"));

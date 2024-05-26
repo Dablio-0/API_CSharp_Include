@@ -14,7 +14,7 @@ namespace API_C_Sharp.Model.Post
         private int id;
         private int idAuthorComment;
         private int idPost;
-        public string text;
+        public BodyCommentContent bodyComment;
         public int likes;
         private DateTime date;
         public DateTime updateDate;
@@ -22,12 +22,12 @@ namespace API_C_Sharp.Model.Post
         #endregion
 
         #region Constructor
-        public Comment(int id, int idAuthorComment, int idPost, string text)
+        public Comment(int id, int idAuthorComment, int idPost, BodyCommentContent bodyComment)
         {
             this.id = id;
             this.idAuthorComment = idAuthorComment;
             this.idPost = idPost;
-            this.text = text;
+            this.bodyComment = bodyComment;
             this.date = DateTime.Now;
             this.updateDate = DateTime.Now;
             this.likesIdUser = new();
@@ -42,10 +42,6 @@ namespace API_C_Sharp.Model.Post
         public int getIdPost { get { return idPost; } }
 
         public int setIdPost { set { idPost = value; } }
-
-        public string getText() { return text; }
-
-        public string setText { set { text = value; } }
 
         public int getLikes { get { return likes; } }
 
@@ -79,7 +75,15 @@ namespace API_C_Sharp.Model.Post
             json["id"] = id;
             json["idAuthorComment"] = idAuthorComment;
             json["idPost"] = idPost;
-            json["text"] = text;
+
+            /* BodyComment Element */
+            JObject bodyCommentJson = new();
+            bodyCommentJson["text"] = bodyComment.text;
+            bodyCommentJson["code"] = bodyComment.code;
+            bodyCommentJson["language"] = bodyComment.language;
+            bodyCommentJson["image"] = bodyComment.image;
+            json["body"] = bodyCommentJson;
+
             json["likes"] = likes;
             json["date"] = date.ToString("dd/MM/yyyy");
             json["updateDate"] = updateDate.ToString("dd/MM/yyyy");
