@@ -21,6 +21,7 @@ namespace API_C_Sharp.Controller
             string title = (string)request.body.GetValue("title");
 
             JObject bodyJson = (JObject)request.body.GetValue("body");
+
             BodyContent body = new(
                 (string)bodyJson.GetValue("text"),
                 (string)bodyJson.GetValue("code"),

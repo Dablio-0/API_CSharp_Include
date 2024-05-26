@@ -23,7 +23,7 @@ namespace API_C_Sharp.Controller
             if (idPost == null)
                 return ResponseUtils.NotFound("Post não encontrado.");
 
-            JObject bodyCommentJson = (JObject)request.body.GetValue("body");
+            JObject bodyCommentJson = (JObject)request.body.GetValue("bodyComment");
             BodyCommentContent bodyComment = new(
                 (string)bodyCommentJson.GetValue("text"),
                 (string)bodyCommentJson.GetValue("code"),
@@ -63,7 +63,7 @@ namespace API_C_Sharp.Controller
             {
                 if (c.getId == comment.getId)
                 {
-                    JObject bodyCommentJson = (JObject)request.body.GetValue("body");
+                    JObject bodyCommentJson = (JObject)request.body.GetValue("bodyComment");
                     BodyCommentContent bodyComment = new(
                         (string)bodyCommentJson.GetValue("text"),
                         (string)bodyCommentJson.GetValue("code"),
@@ -79,7 +79,7 @@ namespace API_C_Sharp.Controller
                                                "id:" + comment.getId + ", " +
                                                "idAuthor: " + comment.getIdAuthorComment + ", " +
                                                "idPost: " + comment.getIdPost + ", " +
-                                               "body: " + comment.bodyComment.serialize() + ", " +
+                                               "bodyComment: " + comment.bodyComment.serialize() + ", " +
                                                "date: " + comment.getDate + ", " +
                                                "updateDate: " + comment.getUpdateDate + ", " +
                                                " }"));
