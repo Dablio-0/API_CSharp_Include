@@ -81,6 +81,8 @@ namespace API_C_Sharp.Controller
             if (!Password.IsValid(password))
                 return ResponseUtils.Unauthorized("Senha inválida.");
 
+            string imageIconProfile = (string)request.body.GetValue("imageIconProfile");
+
             string birthDate = (string)request.body.GetValue("birthDate");
 
             JArray skills = (JArray)request.body.GetValue("skills");
@@ -98,6 +100,7 @@ namespace API_C_Sharp.Controller
             user.setName = name;
             user.setEmail = email;
             user.setPassword = password;
+            user.setImageIconProfile = imageIconProfile;
             user.setBirthDate = birthDate;
             user.setSkills = skillsList;
             user.setJobs = jobsList;

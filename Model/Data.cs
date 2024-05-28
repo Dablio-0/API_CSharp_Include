@@ -96,7 +96,7 @@ namespace API_C_Sharp.Model
             return posts;
         }
 
-        public int addPost(int idAuthor, string title, string body)
+        public int addPost(int idAuthor, string title, BodyContent body)
         {
             int ID = postsList.Count();
 
@@ -124,13 +124,13 @@ namespace API_C_Sharp.Model
             return post;
         }
         #endregion
-          
+
         #region Data Comment Methods
-        public int addComment(int idAuthor, int idPost, string text)
+        public int addComment(int idAuthor, int idPost, BodyCommentContent bodyComment)
         {
             int ID = commentsList.Count();
 
-            commentsList.Add(new Comment(ID, idAuthor, idPost, text));
+            commentsList.Add(new Comment(ID, idAuthor, idPost, bodyComment));
 
             return ID;
         }
@@ -144,7 +144,7 @@ namespace API_C_Sharp.Model
         {
             List<Comment> commentsListByPost = new();
             commentsList = this.getAllComments();
-            commentsList.Find(comment => comment.getIdPost == idPost);
+            commentsList.FindAll(comment => comment.getIdPost == idPost);
 
             return commentsListByPost;
         }
@@ -166,7 +166,7 @@ namespace API_C_Sharp.Model
             return comment;
         }
 
-        public Comment remvoveCommentLikeByUser(int id)
+        public Comment removeCommentLikeByUser(int id)
         {
             Comment comment = getCommentById(id);
             comment.removeLike();

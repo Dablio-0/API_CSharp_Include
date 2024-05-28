@@ -14,8 +14,20 @@ namespace API_C_Sharp.Controller
         public static Response create(Request request, Data data)
         {
             int idAuthor = data.getCurrentUser();
+
+            if (idAuthor == -1)
+                return ResponseUtils.Unauthorized("Não há usuários criados.");
+
             string title = (string)request.body.GetValue("title");
-            string body = (string)request.body.GetValue("body");
+
+            JObject bodyJson = (JObject)request.body.GetValue("body");
+
+            BodyContent body = new(
+                (string)bodyJson.GetValue("text"),
+                (string)bodyJson.GetValue("code"),
+                (string)bodyJson.GetValue("language"),
+                (string)bodyJson.GetValue("image")
+            );
 
             int postId = data.addPost(idAuthor, title, body);
 
@@ -32,7 +44,15 @@ namespace API_C_Sharp.Controller
                 return ResponseUtils.NotFound("Post não encontrado.");
 
             string title = (string)request.body.GetValue("title");
-            string body = (string)request.body.GetValue("body");
+
+            JObject bodyJson = (JObject)request.body.GetValue("body");
+            BodyContent body = new(
+                (string)bodyJson.GetValue("text"),
+                (string)bodyJson.GetValue("code"),
+                (string)bodyJson.GetValue("language"),
+                (string)bodyJson.GetValue("image")
+            );
+
 
             JArray images = (JArray)request.body.GetValue("images");
             List<string> imagesList = new();
@@ -49,7 +69,7 @@ namespace API_C_Sharp.Controller
                 "id:" + post.getId + ", " +
                 "idAuthor: " + post.getIdAuthor + ", " +
                 "title: " + post.title + ", " +
-                "body: " + post.body + ", " +
+                "body: " + post.body.serialize() + ", " +
                 "date: " + post.getDate + ", " +
                 "updateDate: " + post.getUpdateDate + ", " +
                 " }"));
@@ -141,19 +161,31 @@ namespace API_C_Sharp.Controller
 
             if (statusLike)
             {
+                if (post.getLikesIdUser.Contains(user.getId))
+                    return ResponseUtils.Conflict("Você já curtiu esse post.");
+
                 data.addPostLikeByUser((int)request.routeParans["idPost"]);
-                return ResponseUtils.JsonSuccessResponse((JObject.Parse("{" +
-                    "idPost:" + post.getId + ", " +
-                    "likes:" + post.getLikes + "}")));
+                post.getLikesIdUser.Add(user.getId);
+
+                return ResponseUtils.JsonSuccessResponse(JObject.Parse("{" +
+                    "\"idPost\":" + post.getId + ", " +
+                    "\"likes\":" + post.getLikes + "}"));
             }
             else
             {
+                if (!post.getLikesIdUser.Contains(user.getId))
+                    return ResponseUtils.Conflict("Não é possível tirar o like duas vezes ou você não deu like ainda.");
+
+
                 data.removePostLikeByUser((int)request.routeParans["idPost"]);
-                return ResponseUtils.JsonSuccessResponse((JObject.Parse("{" +
-                    "idPost:" + post.getId + ", " +
-                    "likes:" + post.getLikes + "}")));
+                post.getLikesIdUser.Remove(user.getId);
+
+                return ResponseUtils.JsonSuccessResponse(JObject.Parse("{" +
+                    "\"idPost\":" + post.getId + ", " +
+                    "\"likes\":" + post.getLikes + "}"));
             }
         }
+
         #endregion
     }
 }
