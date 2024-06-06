@@ -38,7 +38,7 @@ namespace API_C_Sharp.Controller
         #region Update Post
         public static Response update(Request request, Data data)
         {
-            Post post = data.getPostById((int)request.routeParans["id"]);
+            Post post = data.getPostById((int)request.routeParans["idPost"]);
 
             if (post == null)
                 return ResponseUtils.NotFound("Post não encontrado.");
@@ -53,33 +53,46 @@ namespace API_C_Sharp.Controller
                 (string)bodyJson.GetValue("image")
             );
 
-
             JArray images = (JArray)request.body.GetValue("images");
-            List<string> imagesList = new();
 
-            foreach (JToken image in images)
-                imagesList.Add((string)image);
+            if (images != null)
+            {
+                List<string> imagesList = new();
+
+                foreach (JToken image in images)
+                    imagesList.Add((string)image);
+
+                post.setImageList = imagesList;
+            }
 
             post.title = title;
             post.body = body;
-            post.setImageList = imagesList;
             post.setUpdateDate = DateTime.Now;
 
-            return ResponseUtils.JsonSuccessResponse(JObject.Parse("{" +
-                "id:" + post.getId + ", " +
-                "idAuthor: " + post.getIdAuthor + ", " +
-                "title: " + post.title + ", " +
-                "body: " + post.body.serialize() + ", " +
-                "date: " + post.getDate + ", " +
-                "updateDate: " + post.getUpdateDate + ", " +
-                " }"));
+            return ResponseUtils.JsonSuccessResponse(new JObject(
+                new JProperty("id", post.getId),
+                new JProperty("idAuthor", post.getIdAuthor),
+                new JProperty("title", post.title),
+                new JProperty("body", post.body.serialize()),
+                new JProperty("date", post.getDate),
+                new JProperty("updateDate", post.getUpdateDate)
+                ));
+
+            //return ResponseUtils.JsonSuccessResponse(JObject.Parse(`{
+            //    id: post.getId,
+            //    idAuthor: post.getIdAuthor,
+            //    title: post.title, 
+            //    body: post.body.serialize(),
+            //    date: post.getDate,
+            //    updateDate: post.getUpdateDate
+            //}`));
         }
         #endregion
 
         #region Delete Post
         public static Response delete(Request request, Data data)
         {
-            Post post = data.getPostById((int)request.routeParans["id"]);
+            Post post = data.getPostById((int)request.routeParans["idPost"]);
 
             if (post == null)
                 return ResponseUtils.NotFound("Post não encontrado.");
@@ -114,7 +127,7 @@ namespace API_C_Sharp.Controller
         #region View a unique post
         public static Response getPostById(Request request, Data data)
         {
-            Post post = data.getPostById((int)request.routeParans["id"]);
+            Post post = data.getPostById((int)request.routeParans["idPost"]);
 
             if (post == null)
                 return ResponseUtils.NotFound("Post não encontrado.");
@@ -123,29 +136,29 @@ namespace API_C_Sharp.Controller
         }
         #endregion
 
-        #region List of Comments by Post
-        public static Response getPostCommentList(Request request, Data data)
-        {
-            Post post = data.getPostById((int)request.routeParans["id"]);
+        //#region List of Comments by Post
+        //public static Response getPostCommentList(Request request, Data data)
+        //{
+        //    Post post = data.getPostById((int)request.routeParans.GetValue("idPost"));
 
-            if (post == null)
-                return ResponseUtils.NotFound("Post não encontrado.");
+        //    if (post == null)
+        //        return ResponseUtils.NotFound("Post não encontrado.");
 
-            JArray commentListByPost = new();
-            foreach (Comment comment in post.getCommentList)
-                commentListByPost.Add(comment.serialize());
+        //    JArray commentListByPost = new();
+        //    foreach (Comment comment in post.getCommentList)
+        //        commentListByPost.Add(comment.serialize());
 
-            if (commentListByPost.Count == 0)
-                return ResponseUtils.NotFound("Não há comentários nesse post.");
+        //    if (commentListByPost.Count == 0)
+        //        return ResponseUtils.NotFound("Não há comentários nesse post.");
 
-            return ResponseUtils.JsonSuccessResponse(commentListByPost);
-        }
-        #endregion
+        //    return ResponseUtils.JsonSuccessResponse(commentListByPost);
+        //}
+        //#endregion
 
         #region Interaction
         public static Response like(Request request, Data data)
         {
-            Post post = data.getPostById((int)request.routeParans.GetValue("idPost"));
+            Post post = data.getPostById((int)request.routeParans["idPost"]);
 
             if (post == null)
                 return ResponseUtils.NotFound("Post não encontrado.");
@@ -185,7 +198,6 @@ namespace API_C_Sharp.Controller
                     "\"likes\":" + post.getLikes + "}"));
             }
         }
-
         #endregion
     }
 }

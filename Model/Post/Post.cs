@@ -110,8 +110,8 @@ namespace API_C_Sharp.Model.Post
             bodyJson["image"] = body.image;
             json["body"] = bodyJson;
 
-            json["date"] = date.ToString("dd/MM/yyyy");
-            json["updateDate"] = updateDate.ToString("dd/MM/yyyy");
+            json["date"] = date.ToString("dd/MM/yyyy HH:mm:ss");
+            json["updateDate"] = updateDate.ToString("dd/MM/yyyy HH:mm:ss");
             json["likes"] = likes;
 
             JArray commentsList = new();
