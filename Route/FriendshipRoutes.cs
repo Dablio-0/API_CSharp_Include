@@ -13,13 +13,16 @@ namespace API_C_Sharp.Route
         public FriendshipRoutes(Server app)
         {
             #region Invite Routes
-            app.post("/friendship/send", FriendshipController.sendFriendshipInvite);
-            app.post("/friendship/{idFriendship:int}/accept", FriendshipController.acceptInvite);
-            app.post("/friendship/{idFriendship:int}/reject", FriendshipController.rejectInvite);
+            app.post("/friendship/send/{idUserInvited:int}", FriendshipController.sendFriendshipInvite);
+            app.post("/friendship/invites/{idFriendship:int}/accept", FriendshipController.acceptInvite);
+            app.post("/friendship/invites/{idFriendship:int}/reject", FriendshipController.rejectInvite);
+
+            // list invites by user
+            app.get("/friendship/invites/{idCurrentUser:int}", FriendshipController.listInvites);
             #endregion
 
             #region List Friendship
-            app.get("/user/idUser:int}/friendship/list", FriendshipController.listFriendship);
+            app.get("/friendship/user/{idUser:int}/list", FriendshipController.listFriendship);
             #endregion
         }
     }

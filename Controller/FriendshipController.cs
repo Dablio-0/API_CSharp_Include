@@ -49,6 +49,11 @@ namespace API_C_Sharp.Controller
             return new Response();
         }
 
+        public static Response listInvites(Request request, Data data)
+        {
+            return new Response();
+        }
+
         public static Response listFriendship(Request request, Data data)
         {
             return new Response();
