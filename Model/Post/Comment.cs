@@ -85,8 +85,8 @@ namespace API_C_Sharp.Model.Post
             json["body"] = bodyCommentJson;
 
             json["likes"] = likes;
-            json["date"] = date.ToString("dd/MM/yyyy");
-            json["updateDate"] = updateDate.ToString("dd/MM/yyyy");
+            json["date"] = date.ToString("dd/MM/yyyy HH:mm:ss");
+            json["updateDate"] = updateDate.ToString("dd/MM/yyyy HH:mm:ss");
 
             JArray likesIdUser = new();
             foreach (int id in likesIdUser)

@@ -18,8 +18,12 @@ namespace API_C_Sharp.Route
             app.delete("/post/{idPost:int}/delete", PostController.delete);
             #endregion
 
-            #region List Comments (Feed)
+            #region List Post (Feed)
             app.get("/feed", PostController.feed);
+            #endregion
+
+            #region Unique Post
+            app.get("/post/{idPost:int}/view", PostController.getPostById);
             #endregion
 
             #region Like Post

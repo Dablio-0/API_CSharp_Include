@@ -18,9 +18,9 @@ namespace API_C_Sharp.Controller
             if (idAuthor == -1)
                 return ResponseUtils.Unauthorized("Não há usuários criados.");
 
-            int idPost = data.getPostById((int)request.routeParans["idPost"]).getId;
+            Post post = data.getPostById((int)request.routeParans["idPost"]);
 
-            if (idPost == null)
+            if (post == null)
                 return ResponseUtils.NotFound("Post não encontrado.");
 
             JObject bodyCommentJson = (JObject)request.body.GetValue("bodyComment");
@@ -31,22 +31,21 @@ namespace API_C_Sharp.Controller
                 (string)bodyCommentJson.GetValue("image")
             );
 
-            int commentId = data.addComment(idAuthor, idPost, bodyComment);
+            int commentId = data.addComment(idAuthor, post.getId, bodyComment);
 
             Comment commentCreated = data.getCommentById(commentId);
-
-            Post post = data.getPostById(idPost);
 
             post.getCommentList.Add(commentCreated);
 
             return ResponseUtils.JsonSuccessResponse(JObject.Parse("{" +
                 "id:" + commentId + ", " +
                 "idAuthor: " + idAuthor + ", " +
-                "idPost:" + idPost + ", " +
+                "idPost:" + post.getId + ", " +
             " }"));
         }
         #endregion
 
+        #region Update Comment
         public static Response update(Request request, Data data)
         {
             Post post = data.getPostById((int)request.routeParans["idPost"]);
@@ -75,21 +74,30 @@ namespace API_C_Sharp.Controller
                     comment.setUpdateDate = DateTime.Now;
 
 
-                    return ResponseUtils.JsonSuccessResponse(JObject.Parse("{" +
-                                               "id:" + comment.getId + ", " +
-                                               "idAuthor: " + comment.getIdAuthorComment + ", " +
-                                               "idPost: " + comment.getIdPost + ", " +
-                                               "bodyComment: " + comment.bodyComment.serialize() + ", " +
-                                               "date: " + comment.getDate + ", " +
-                                               "updateDate: " + comment.getUpdateDate + ", " +
-                                               " }"));
+                    return ResponseUtils.JsonSuccessResponse(new JObject(
+                        new JProperty("id", comment.getId),
+                        new JProperty("idAuthor", comment.getIdAuthorComment),
+                        new JProperty("body", comment.bodyComment.serialize()),
+                        new JProperty("date", comment.getDate),
+                        new JProperty("updateDate", comment.getUpdateDate)
+                        ));
+
+                    //return ResponseUtils.JsonSuccessResponse(JObject.Parse("{" +
+                    //      "id:" + comment.getId + ", " +
+                    //      "idAuthor: " + comment.getIdAuthorComment + ", " +
+                    //      "idPost: " + comment.getIdPost + ", " +
+                    //      "bodyComment: " + comment.bodyComment.serialize() + ", " +
+                    //      "date: " + comment.getDate + ", " +
+                    //      "updateDate: " + comment.getUpdateDate + ", " +
+                    //      " }"));
                 }
             }
 
             return ResponseUtils.NotFound("Este comentário não existe na lista de comentários desse post.");
         }
+        #endregion
 
-
+        #region Delete Comment
         public static Response delete(Request request, Data data)
         {
             Post post = data.getPostById((int)request.routeParans["idPost"]);
@@ -118,7 +126,9 @@ namespace API_C_Sharp.Controller
             }
             return ResponseUtils.NotFound("Comentário não encontrado.");
         }
+        #endregion
 
+        #region List Comments by Post
         public static Response listCommentsByPost(Request request, Data data)
         {
             Post post = data.getPostById((int)request.routeParans["idPost"]);
@@ -141,7 +151,9 @@ namespace API_C_Sharp.Controller
 
             return ResponseUtils.JsonSuccessResponse(commentListByPost);
         }
+        #endregion
 
+        #region Interaction
         public static Response like(Request request, Data data)
         {
             Post post = data.addPostLikeByUser((int)request.routeParans["idPost"]);
@@ -149,7 +161,7 @@ namespace API_C_Sharp.Controller
             if (post == null)
                 return ResponseUtils.NotFound("Post não encontrado.");
 
-            Comment comment = data.getCommentById((int)request.routeParans["idComment"]);
+            Comment comment = data.getCommentById((int)request.routeParans["idPost"]);
 
             if (comment == null)
                 return ResponseUtils.NotFound("Comentário não encontrado.");
@@ -187,5 +199,6 @@ namespace API_C_Sharp.Controller
                     "likes:" + comment.getLikes + "}")));
             }
         }
+        #endregion
     }
 }
