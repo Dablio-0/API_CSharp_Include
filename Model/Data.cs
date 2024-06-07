@@ -74,6 +74,36 @@ namespace API_C_Sharp.Model
         }
         #endregion
 
+        #region Data Friendship Methods
+        public List<User.User> getListNotFriends(User.User invitedUser)
+        {
+            List<User.User> notFriends = new();
+
+            foreach (User.User user in usersList)
+            {
+                if (!user.getFriends.Contains(invitedUser))
+                    notFriends.Add(user);
+            }
+
+            return notFriends;
+        }
+
+        public List<Friendship> getFriendshipsPending()
+        {
+            return friendshipsList.FindAll(friendshipsList => friendshipsList.getStatus == FriendshipStatus.pending);
+        }
+
+        public List<Friendship> getFriendshipsAccepted()
+        {
+            return friendshipsList.FindAll(friendshipsList => friendshipsList.getStatus == FriendshipStatus.accepted);
+        }
+
+        public List<Friendship> getFriendshipsDeclined()
+        {
+            return friendshipsList.FindAll(friendshipsList => friendshipsList.getStatus == FriendshipStatus.declined);
+        }
+        #endregion
+
         #region Data Post Methods
         public List<Post.Post> getPosts()
         {
