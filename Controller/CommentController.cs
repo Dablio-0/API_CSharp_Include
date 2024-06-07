@@ -75,12 +75,11 @@ namespace API_C_Sharp.Controller
 
 
                     return ResponseUtils.JsonSuccessResponse(new JObject(
-                        new JProperty("id", post.getId),
-                        new JProperty("idAuthor", post.getIdAuthor),
-                        new JProperty("title", post.title),
-                        new JProperty("body", post.body.serialize()),
-                        new JProperty("date", post.getDate),
-                        new JProperty("updateDate", post.getUpdateDate)
+                        new JProperty("id", comment.getId),
+                        new JProperty("idAuthor", comment.getIdAuthorComment),
+                        new JProperty("body", comment.bodyComment.serialize()),
+                        new JProperty("date", comment.getDate),
+                        new JProperty("updateDate", comment.getUpdateDate)
                         ));
 
                     //return ResponseUtils.JsonSuccessResponse(JObject.Parse("{" +
