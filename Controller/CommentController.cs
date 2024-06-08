@@ -4,7 +4,6 @@ using API_C_Sharp.Model.Post;
 using API_C_Sharp.Model.User;
 using API_C_Sharp.Utils;
 using Newtonsoft.Json.Linq;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace API_C_Sharp.Controller
 {
