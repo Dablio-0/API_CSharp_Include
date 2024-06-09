@@ -75,18 +75,53 @@ namespace API_C_Sharp.Model
         #endregion
 
         #region Data Friendship Methods
+        public int addFrienship(int idInviter, int userInvited, FriendshipStatus status, Chat chat)
+        {
+            int ID = friendshipsList.Count();
+
+            friendshipsList.Add(new Friendship(ID, idInviter, userInvited, status, chat));
+
+            return ID;
+        }
+
+        public Friendship modifyFriendshipStatus(int idFriendship, FriendshipStatus status)
+        {
+            // Obtém a amizade pelo ID
+            Friendship friendship = this.getFriendshipById(idFriendship);
+
+            // Verifica se a amizade existe
+            if (friendship == null)
+            {
+                throw new Exception("A amizade não foi encontrada.");
+            }
+
+            // Atualiza o status da amizade
+            friendship.setStatus = status;
+
+            // Retorna a amizade atualizada
+            return friendship;
+        }
+
+        public Friendship getFriendshipById(int id)
+        {
+            return friendshipsList.Find(friendship => friendship.getId == id);
+        }
+
         public List<User.User> getListNotFriends(User.User invitedUser)
         {
-            List<User.User> notFriends = new();
+            List<User.User> notFriends = new List<User.User>();
 
             foreach (User.User user in usersList)
             {
-                if (!user.getFriends.Contains(invitedUser))
+                if (!user.getFriends.Contains(invitedUser) && user.getId != invitedUser.getId)
+                {
                     notFriends.Add(user);
+                }
             }
 
             return notFriends;
         }
+
 
         public List<Friendship> getFriendshipsPending()
         {

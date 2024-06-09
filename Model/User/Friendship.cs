@@ -11,27 +11,32 @@ namespace API_C_Sharp.Model.User
 
     public class Friendship
     {
-
-        private int inviter;
-        private int invited;
+        private int id;
+        private int idInviter;
+        private int idInvited;
         public FriendshipStatus status;
         private Chat chat;
 
-        public Friendship(int inviter, int invited, FriendshipStatus status, Chat chat)
+        public Friendship(int id, int idInviter, int idInvited, FriendshipStatus status, Chat chat)
         {
-            this.inviter = inviter;
-            this.invited = invited;
+            this.id = id;
+            this.idInviter = idInviter;
+            this.idInvited = idInvited;
             this.status = FriendshipStatus.pending;
             this.chat = chat;
         }
 
-        public int getInviter { get { return inviter; } }
+        public int getId { get { return id; } }
 
-        public int setInviter { set { setInviter = value; } }
+        public int setId { set { id = value; } }
 
-        public int getInvited { get { return invited; } }
+        public int getIdInviter { get { return idInviter; } }
 
-        public int setInvited { set { invited = value; } }
+        public int setIdInviter { set { idInviter = value; } }
+
+        public int getIdInvited { get { return idInvited; } }
+
+        public int setIdInvited { set { idInvited = value; } }
 
         public FriendshipStatus getStatus { get { return status; } }
 
@@ -48,8 +53,8 @@ namespace API_C_Sharp.Model.User
         {
             JObject json = new JObject();
 
-            json["inviter"] = inviter;
-            json["invited"] = invited;
+            json["inviter"] = idInviter;
+            json["invited"] = idInvited;
             json["status"] = status.ToString();
             json["chat"] = null;
 
