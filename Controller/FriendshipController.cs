@@ -2,6 +2,7 @@
 using API_C_Sharp.Model;
 using API_C_Sharp.Model.User;
 using API_C_Sharp.Utils;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,10 @@ namespace API_C_Sharp.Controller
         {
             // Obtém o usuário a ser convidado e o usuário logado
             User userInvited = data.getUserById((int)request.routeParans["idUserInvited"]);
+
+            if (userInvited.getId.Equals(data.getCurrentUser))
+                return ResponseUtils.Conflict("Não é possível enviar um convite para si mesmo.");
+
             int idInviter = data.getCurrentUser();
 
             // Verifica se o usuário logado já é amigo do usuário convidado
@@ -64,6 +69,10 @@ namespace API_C_Sharp.Controller
                 User currentUser = data.getUserById(data.getCurrentUser());
 
                 currentUser.getFriends.Add(data.getUserById(friendship.getIdInviter));
+
+                User friendAdded = data.getUserById(friendship.getIdInviter);
+
+                friendAdded.getFriends.Add(currentUser);
             }
 
             JObject JsonResponse = new JObject
@@ -126,14 +135,22 @@ namespace API_C_Sharp.Controller
 
         public static Response listFriendshipByUser(Request request, Data data)
         {
-            User user = data.getUserById((int)request.routeParans["idCurrentUser"]);
+            User user = data.getUserById((int)request.routeParans["idUser"]);
 
             if (user == null)
                 return ResponseUtils.NotFound("Usuário não encontrado.");
 
-            List<User> friends = user.getFriends;
+            List<User> friendsList = user.getFriends;
 
-            return ResponseUtils.JsonSuccessResponse(JArray.FromObject(friends));
+            var settings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+
+            JArray friends = JArray.FromObject(friendsList, JsonSerializer.Create(settings));
+
+            return ResponseUtils.JsonSuccessResponse(friends);
         }
+
     }
 }

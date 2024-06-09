@@ -10,6 +10,7 @@ namespace API_C_Sharp.Route
         {
             #region Login at System
             app.post("/login", UserController.login);
+            app.get("/user/logged", UserController.userLogged);
             #endregion
 
             #region CRUD User Routes

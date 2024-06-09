@@ -5,6 +5,7 @@ using API_C_Sharp.Model.User;
 using API_C_Sharp.Utils;
 using Newtonsoft.Json.Linq;
 using System.Collections.Specialized;
+using System.Data;
 using System.Formats.Tar;
 
 namespace API_C_Sharp.Controller
@@ -35,6 +36,22 @@ namespace API_C_Sharp.Controller
             data.login(user.getId);
 
             return ResponseUtils.JsonSuccessResponse(JObject.Parse("{id:" + user.getId + "}"));
+        }
+
+        public static Response userLogged(Request request, Data data)
+        {
+            User user = data.getUserById(data.getCurrentUser());
+
+            if (user == null)
+                return ResponseUtils.NotFound("Não há nenhum login ativo.");
+
+            JObject JsonResponse = new JObject
+            {
+                ["id"] = user.getId,
+                ["email"] = user.getEmail
+            };
+
+            return ResponseUtils.JsonSuccessResponse(JsonResponse);
         }
         #endregion
 
