@@ -13,32 +13,7 @@ namespace API_C_Sharp.Controller
 {
     public class FriendshipController
     {
-        //public static Response sendFriendshipInvite(Request request, Data data)
-        //{
-        //    // Create a new friendship invite
-        //    User userInvited = data.getUserById((int)request.routeParans["idUserInvited"]);
-        //    int idInviter = data.getCurrentUser();
-
-        //    List<User> listNotFriends = data.getListNotFriends(userInvited);
-
-        //    foreach (User user in listNotFriends)
-        //        if (!user.getId.Equals(idInviter))
-        //            return ResponseUtils.Conflict("Você ja é amigo desse usuário.");
-
-        //    Friendship newInvite = new Friendship(idInviter, userInvited.getId, FriendshipStatus.pending, null);
-
-        //    if (List<Friendship>.ReferenceEquals(listNotFriends, newInvite))
-        //        return ResponseUtils.Conflict("Você ja enviou um convite para esse usuário.");
-
-        //    JObject responseJson = new JObject
-        //    {
-        //        ["friendship"] = JObject.FromObject(newInvite),
-        //        ["message"] = "Convite enviado!"
-        //    };
-
-        //    return ResponseUtils.JsonSuccessResponse(responseJson);
-        //}
-
+        #region Create Friendship Instance (Pendingg Status)
         public static Response sendFriendshipInvite(Request request, Data data)
         {
             // Obtém o usuário a ser convidado e o usuário logado
@@ -64,16 +39,41 @@ namespace API_C_Sharp.Controller
 
             JObject responseJson = new JObject
             {
+                ["id"] = friendshipId,
                 ["friendship"] = JObject.FromObject(data.getFriendshipById(friendshipId)),
                 ["message"] = "Convite enviado!"
             };
 
             return ResponseUtils.JsonSuccessResponse(responseJson);
         }
+        #endregion
 
         public static Response acceptInvite(Request request, Data data)
         {
-            return new Response();
+            Friendship friendship = data.getFriendshipById((int)request.routeParans["idFriendship"]);
+
+            if (friendship == null)
+                return ResponseUtils.NotFound("Convite não encontrado.");
+
+            if (friendship.getStatus.Equals(FriendshipStatus.accepted))
+                return ResponseUtils.Conflict("Convite já aceito.");
+            else
+            {
+                friendship.setStatus = FriendshipStatus.accepted;
+
+                User currentUser = data.getUserById(data.getCurrentUser());
+
+                currentUser.getFriends.Add(data.getUserById(friendship.getIdInviter));
+            }
+
+            JObject JsonResponse = new JObject
+            {
+                ["id"] = friendship.getId,
+                ["friendship"] = JObject.FromObject(friendship),
+                ["message"] = "Convite aceito!"
+            };
+
+            return ResponseUtils.JsonSuccessResponse(JsonResponse);
         }
 
         public static Response rejectInvite(Request request, Data data)
@@ -81,14 +81,59 @@ namespace API_C_Sharp.Controller
             return new Response();
         }
 
-        public static Response listInvites(Request request, Data data)
+        public static Response blockFriend(Request request, Data data)
         {
             return new Response();
         }
 
-        public static Response listFriendship(Request request, Data data)
+        public static Response terminateFriendship(Request request, Data data)
         {
             return new Response();
+        }
+
+        public static Response listInvitesByUser(Request request, Data data)
+        {
+            User user = data.getUserById((int)request.routeParans["idCurrentUser"]);
+
+            if (user == null)
+            {
+                return ResponseUtils.NotFound("Usuário não encontrado.");
+            }
+
+            List<Friendship> friendshipsList = data.getFriendships();
+            List<Friendship> invitationsSent = new();
+            List<Friendship> invitationsReceived = new();
+
+            foreach (Friendship friendship in friendshipsList)
+            {
+                if (friendship.getStatus == FriendshipStatus.pending)
+                {
+                    if (friendship.getIdInvited.Equals(user.getId))
+                        invitationsReceived.Add(friendship);
+                    else if (friendship.getIdInviter.Equals(user.getId))
+                        invitationsSent.Add(friendship);
+                }
+            }
+
+            JObject responseJson = new JObject
+            {
+                ["invitationsSent"] = JArray.FromObject(invitationsSent),
+                ["invitationsReceived"] = JArray.FromObject(invitationsReceived)
+            };
+
+            return ResponseUtils.JsonSuccessResponse(responseJson);
+        }
+
+        public static Response listFriendshipByUser(Request request, Data data)
+        {
+            User user = data.getUserById((int)request.routeParans["idCurrentUser"]);
+
+            if (user == null)
+                return ResponseUtils.NotFound("Usuário não encontrado.");
+
+            List<User> friends = user.getFriends;
+
+            return ResponseUtils.JsonSuccessResponse(JArray.FromObject(friends));
         }
     }
 }

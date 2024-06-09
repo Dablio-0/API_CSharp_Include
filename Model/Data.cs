@@ -1,6 +1,7 @@
 
 using API_C_Sharp.Model.Post;
 using API_C_Sharp.Model.User;
+using API_C_Sharp.Model.User.Chat;
 using System.Security.Cryptography.X509Certificates;
 
 namespace API_C_Sharp.Model
@@ -100,6 +101,11 @@ namespace API_C_Sharp.Model
 
             // Retorna a amizade atualizada
             return friendship;
+        }
+
+        public List<Friendship> getFriendships()
+        {
+            return friendshipsList;
         }
 
         public Friendship getFriendshipById(int id)

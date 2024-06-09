@@ -18,11 +18,15 @@ namespace API_C_Sharp.Route
             app.post("/friendship/invites/{idFriendship:int}/reject", FriendshipController.rejectInvite);
 
             // list invites by user
-            app.get("/friendship/invites/{idCurrentUser:int}", FriendshipController.listInvites);
+            app.get("/friendship/invites/{idCurrentUser:int}", FriendshipController.listInvitesByUser);
             #endregion
 
-            #region List Friendship
-            app.get("/friendship/user/{idUser:int}/list", FriendshipController.listFriendship);
+            #region Friendship
+            app.get("/friendship/user/{idUser:int}/list", FriendshipController.listFriendshipByUser);
+
+            // Manage Friendship
+            app.get("/friendships/user/{idCurrentUser:int}/friendship/{idFrienship:int}/block", FriendshipController.blockFriend);
+            app.get("/friendships/user/{idCurrentUser:int}/friendship/{idFrienship:int}/terminate", FriendshipController.terminateFriendship);
             #endregion
         }
     }

@@ -6,7 +6,9 @@ namespace API_C_Sharp.Model.User
     {
         pending,
         accepted,
-        declined
+        declined,
+        blocked,
+        terminated
     }
 
     public class Friendship
@@ -15,9 +17,9 @@ namespace API_C_Sharp.Model.User
         private int idInviter;
         private int idInvited;
         public FriendshipStatus status;
-        private Chat chat;
+        private Chat.Chat chat;
 
-        public Friendship(int id, int idInviter, int idInvited, FriendshipStatus status, Chat chat)
+        public Friendship(int id, int idInviter, int idInvited, FriendshipStatus status, Chat.Chat chat)
         {
             this.id = id;
             this.idInviter = idInviter;
@@ -46,7 +48,7 @@ namespace API_C_Sharp.Model.User
 
         public Boolean check(int inviter, int invited) { return true; }
 
-        public Chat Chat { get { return chat; } }
+        public Chat.Chat Chat { get { return chat; } }
 
         #region Serialization for JSON
         public JObject serialize()
