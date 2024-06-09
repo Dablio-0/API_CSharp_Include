@@ -176,7 +176,7 @@ namespace API_C_Sharp.Controller
                 if (comment.getLikesIdUser.Contains(user.getId))
                     return ResponseUtils.Conflict("Você já curtiu esse comentário.");
 
-                data.addCommentLikeByUser((int)request.routeParans["idPost"]);
+                data.addCommentLikeByUser((int)request.routeParans["idComment"]);
                 comment.getLikesIdUser.Add(user.getId);
 
                 return ResponseUtils.JsonSuccessResponse((JObject.Parse("{" +
@@ -189,7 +189,7 @@ namespace API_C_Sharp.Controller
                 if (!comment.getLikesIdUser.Contains(user.getId))
                     return ResponseUtils.Conflict("Não é possível tirar o like duas vezes ou você não deu like ainda.");
 
-                data.removeCommentLikeByUser((int)request.routeParans["idPost"]);
+                data.removeCommentLikeByUser((int)request.routeParans["idComment"]);
                 comment.getLikesIdUser.Remove(user.getId);
 
                 return ResponseUtils.JsonSuccessResponse((JObject.Parse("{" +
