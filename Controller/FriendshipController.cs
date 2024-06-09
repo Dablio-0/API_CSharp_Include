@@ -151,6 +151,5 @@ namespace API_C_Sharp.Controller
 
             return ResponseUtils.JsonSuccessResponse(friends);
         }
-
     }
 }

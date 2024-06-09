@@ -160,7 +160,7 @@ namespace API_C_Sharp.Controller
             if (post == null)
                 return ResponseUtils.NotFound("Post não encontrado.");
 
-            Comment comment = data.getCommentById((int)request.routeParans["idPost"]);
+            Comment comment = data.getCommentById((int)request.routeParans["idComment"]);
 
             if (comment == null)
                 return ResponseUtils.NotFound("Comentário não encontrado.");
