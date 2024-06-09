@@ -155,7 +155,7 @@ namespace API_C_Sharp.Controller
         #region Interaction
         public static Response like(Request request, Data data)
         {
-            Post post = data.addPostLikeByUser((int)request.routeParans["idPost"]);
+            Post post = data.getPostById((int)request.routeParans["idPost"]);
 
             if (post == null)
                 return ResponseUtils.NotFound("Post não encontrado.");
