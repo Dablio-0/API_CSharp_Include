@@ -9,7 +9,6 @@ namespace API_C_Sharp
         static void Main(string[] args)
         {
             Data dataInstance = new Data();
-            dataInstance.alimentaAi();
 
             Server app = new Server(8080);
 

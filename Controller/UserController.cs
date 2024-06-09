@@ -130,7 +130,7 @@ namespace API_C_Sharp.Controller
                 usersList.Add(user.serialize());
 
             if (usersList.Count == 0)
-                return ResponseUtils.JsonSuccessResponse(JObject.Parse("[]"));
+                return ResponseUtils.NotFound("Não há usuários criados.");
 
 
             return ResponseUtils.JsonSuccessResponse(usersList);

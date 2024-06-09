@@ -22,13 +22,6 @@ namespace API_C_Sharp.Model
             commentsList = new();
         }
 
-        public void alimentaAi()
-        {
-            this.addUser("Usu�rio 1", "usuario1@gmail.com", "123");
-            this.addUser("Usu�rio 2", "usuario2@gmail.com", "123");
-            this.addUser("Usu�rio 3", "usuario3@gmail.com", "123");
-        }
-
         #region Data Users Methods
         public List<User.User> getUsers()
         {

@@ -77,15 +77,6 @@ namespace API_C_Sharp.Controller
                 new JProperty("date", post.getDate),
                 new JProperty("updateDate", post.getUpdateDate)
                 ));
-
-            //return ResponseUtils.JsonSuccessResponse(JObject.Parse(`{
-            //    id: post.getId,
-            //    idAuthor: post.getIdAuthor,
-            //    title: post.title, 
-            //    body: post.body.serialize(),
-            //    date: post.getDate,
-            //    updateDate: post.getUpdateDate
-            //}`));
         }
         #endregion
 

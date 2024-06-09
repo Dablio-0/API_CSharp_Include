@@ -88,11 +88,11 @@ namespace API_C_Sharp.Model.Post
             json["date"] = date.ToString("dd/MM/yyyy HH:mm:ss");
             json["updateDate"] = updateDate.ToString("dd/MM/yyyy HH:mm:ss");
 
-            JArray likesIdUser = new();
+            JArray likesIdUserList = new();
             foreach (int id in likesIdUser)
-                likesIdUser.Add(id);
+                likesIdUserList.Add(id);
 
-            json["likesIdUser"] = likesIdUser;
+            json["likesIdUser"] = likesIdUserList;
 
             return json;
         }
