@@ -21,7 +21,7 @@ namespace API_C_Sharp.Controller
             // Obtém o usuário a ser convidado e o usuário logado
             User userInvited = data.getUserById((int)request.routeParans["idUserInvited"]);
 
-            if (userInvited.getId.Equals(data.getCurrentUser))
+            if (userInvited.getId.Equals(data.getCurrentUser()))
                 return ResponseUtils.Conflict("Não é possível enviar um convite para si mesmo.");
 
             int idInviter = data.getCurrentUser();

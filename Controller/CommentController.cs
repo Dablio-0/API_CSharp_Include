@@ -113,6 +113,7 @@ namespace API_C_Sharp.Controller
                 if (c.getId == comment.getId)
                 {
                     post.getCommentList.Remove(c);
+
                     //return ResponseUtils.JsonSuccessResponse(JObject.Parse("{" +
                     //                    "id:" + comment.getId + ", " +
                     //                    "idAuthor: " + comment.getIdAuthorComment + ", " +

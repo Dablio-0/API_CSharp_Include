@@ -13,7 +13,7 @@ namespace API_C_Sharp.Route
         public ChatRoutes(Server app)
         {
             #region Messages Interaction
-            app.post("chat/friendship/{idFriendship:int}/message", ChatController.sendMessage);
+            app.post("chat/friendship/{idFriendship:int}/message/send", ChatController.sendMessage);
             app.put("chat/frienship/{idFriendship:int}/message/{idMessage:int}/edit", ChatController.editMessage);
             app.delete("chat/frienship/{idFriendship:int}/message/{idMessage:int}/delete", ChatController.editMessage);
             #endregion

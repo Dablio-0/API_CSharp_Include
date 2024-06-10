@@ -11,15 +11,17 @@ namespace API_C_Sharp.Model.User.Chat
     public class Message
     {
         private int id;
+        private int idChatFriendship;
         private int idAuthorMessage;
         private int idUserReceived;
         public BodyMessage bodyMessage;
         private DateTime date;
         public DateTime updateDate;
 
-        public Message(int id, int idAuthorMessage, int idUserReceived, BodyMessage bodyMessage)
+        public Message(int id, int idChatFriendship, int idAuthorMessage, int idUserReceived, BodyMessage bodyMessage)
         {
             this.id = id;
+            this.id = idChatFriendship;
             this.idAuthorMessage = idAuthorMessage;
             this.idUserReceived = idUserReceived;
             this.bodyMessage = bodyMessage;
@@ -29,6 +31,10 @@ namespace API_C_Sharp.Model.User.Chat
 
         #region Gets e Sets
         public int getId { get { return id; } }
+
+        public int getIdChatFriendship { get { return idChatFriendship; } }
+
+        public int setIdChatFriendship { set { idChatFriendship = value; } }
 
         public int getIdAuthorMessage { get { return idAuthorMessage; } }
 
@@ -50,6 +56,7 @@ namespace API_C_Sharp.Model.User.Chat
         {
             JObject json = new();
             json["id"] = id;
+            json["idChatFriendship"] = idChatFriendship;
             json["idAuthorMessage"] = idAuthorMessage;
             json["idUserReceived"] = idUserReceived;
 

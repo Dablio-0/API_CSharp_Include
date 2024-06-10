@@ -12,6 +12,7 @@ namespace API_C_Sharp.Model
         private List<Friendship> friendshipsList;
         private List<Post.Post> postsList;
         private List<Comment> commentsList;
+        private List<Message> messageList;
         private int currentUser = -1;
 
         public Data()
@@ -136,6 +137,23 @@ namespace API_C_Sharp.Model
         {
             return friendshipsList.FindAll(friendshipsList => friendshipsList.getStatus == FriendshipStatus.declined);
         }
+        #endregion
+
+        #region Data Meessage Methods
+        public int addMessage(int idChatFriendshp, int idAuthorMessage, int idUserReceiced, BodyMessage bodyMessage)
+        {
+            int ID = messageList.Count();
+
+            messageList.Add(new Message(ID, idChatFriendshp, idAuthorMessage, idUserReceiced, bodyMessage));
+
+            return ID;
+        }
+
+        public Message getMessageById(int id)
+        {
+            return messageList.Find(message => message.getId == id);
+        }
+
         #endregion
 
         #region Data Post Methods
