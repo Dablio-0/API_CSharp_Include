@@ -156,13 +156,7 @@ namespace API_C_Sharp.Controller
                 if (m.getId == message.getId)
                 {
                     friendship.getChat.getMessageList.Remove(m);
-
-                    //return ResponseUtils.JsonSuccessResponse(JObject.Parse("{" +
-                    //                    "id:" + comment.getId + ", " +
-                    //                    "idAuthor: " + comment.getIdAuthorComment + ", " +
-                    //                    "idPost: " + comment.getIdPost + ", " +
-                    //                    "body: " + comment.bodyComment.serialize() + ", " +
-                    //                    " }"));
+                    //data.popMessage(data.getMessageById(m.getId));
 
                     return ResponseUtils.JsonSuccessResponse(JObject.Parse("{id:" + message.getId + "}"));
                 }

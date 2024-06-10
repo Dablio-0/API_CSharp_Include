@@ -79,6 +79,11 @@ namespace API_C_Sharp.Model
             return ID;
         }
 
+        //public void popFriendship(Friendship friendship)
+        //{
+        //    friendshipsList.Remove(friendship);
+        //}
+
         public Friendship modifyFriendshipStatus(int idFriendship, FriendshipStatus status)
         {
             // Obtém a amizade pelo ID
