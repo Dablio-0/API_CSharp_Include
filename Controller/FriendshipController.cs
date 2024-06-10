@@ -1,6 +1,7 @@
 ﻿using API_C_Sharp.LSharp.HTTP;
 using API_C_Sharp.Model;
 using API_C_Sharp.Model.User;
+using API_C_Sharp.Model.User.Chat;
 using API_C_Sharp.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -65,6 +66,7 @@ namespace API_C_Sharp.Controller
             else
             {
                 friendship.setStatus = FriendshipStatus.accepted;
+                friendship.setChat = new Chat();
 
                 User currentUser = data.getUserById(data.getCurrentUser());
 

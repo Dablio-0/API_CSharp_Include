@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using API_C_Sharp.Model.Post;
+using Newtonsoft.Json.Linq;
 
 namespace API_C_Sharp.Model.User.Chat
 {
@@ -6,7 +7,14 @@ namespace API_C_Sharp.Model.User.Chat
     {
         private List<Message> messageList;
 
-        public Message[] messages { get { return []; } set { } }
+        public Chat()
+        {
+            this.messageList = new List<Message>();
+        }
+
+        public List<Message> getMessageList { get { return messageList; } }
+
+        public List<Message> setMessageList { set { messageList = value; } }
 
         public bool deleteMessage(int item) { return true; }
     }

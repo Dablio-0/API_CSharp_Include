@@ -44,11 +44,14 @@ namespace API_C_Sharp.Model.User
 
         public FriendshipStatus setStatus { set { status = value; } }
 
+        public Chat.Chat getChat { get { return chat; } }
+
+        public Chat.Chat setChat { set { chat = value; } }
+
         public Boolean End() { return true; }
 
         public Boolean check(int inviter, int invited) { return true; }
 
-        public Chat.Chat Chat { get { return chat; } }
 
         #region Serialization for JSON
         public JObject serialize()
