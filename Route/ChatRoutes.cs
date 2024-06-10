@@ -19,7 +19,7 @@ namespace API_C_Sharp.Route
             #endregion
 
             #region List Messages (All Chat)
-            app.get("chat/friendship/{idFriendship:int}/listMessage", ChatController.listMessages);
+            app.get("chat/friendship/{idFriendship:int}/listMessage/{idUserFriend:int}", ChatController.listMessages);
             #endregion
         }
     }
