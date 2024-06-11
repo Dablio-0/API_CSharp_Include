@@ -7,8 +7,7 @@ namespace API_C_Sharp.Model.User
         pending,
         accepted,
         declined,
-        blocked,
-        terminated
+        blocked
     }
 
     public class Friendship

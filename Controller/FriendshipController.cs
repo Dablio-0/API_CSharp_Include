@@ -89,8 +89,28 @@ namespace API_C_Sharp.Controller
 
         public static Response rejectInvite(Request request, Data data)
         {
-            return new Response();
+            Friendship friendship = data.getFriendshipById((int)request.routeParans["idFriendship"]);
+
+            if (friendship == null)
+                return ResponseUtils.NotFound("Convite recusado.");
+
+            if (friendship.getStatus.Equals(FriendshipStatus.declined))
+                return ResponseUtils.Conflict("Convite já recusado.");
+            else
+            {
+                friendship.setStatus = FriendshipStatus.declined;
+            }
+
+            JObject JsonResponse = new JObject
+            {
+                ["id"] = friendship.getId,
+                ["friendship"] = JObject.FromObject(friendship),
+                ["message"] = "Convite recusado!"
+            };
+
+            return ResponseUtils.JsonSuccessResponse(JsonResponse);
         }
+
 
         public static Response blockFriend(Request request, Data data)
         {
