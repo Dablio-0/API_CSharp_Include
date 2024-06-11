@@ -99,16 +99,64 @@ namespace API_C_Sharp.Controller
 
         public static Response terminateFriendship(Request request, Data data)
         {
-            return new Response();
+            // Obtém o usuário atual da sessão
+            User currentUser = data.getUserById(data.getCurrentUser());
+
+            if (currentUser == null)
+                return ResponseUtils.NotFound("Não há usuário ativo na sessão.");
+
+            // Obtém o amigo a partir do ID do parâmetro da rota
+            User friendUser = data.getUserById((int)request.routeParans["idUserFriend"]);
+
+            if (friendUser == null)
+                return ResponseUtils.NotFound("Usuário não encontrado.");
+
+            // Verifica se o usuário logado e o usuário da rota são diferentes
+            if (currentUser.getId == friendUser.getId)
+                return ResponseUtils.Conflict("Você não pode encerrar amizade consigo mesmo.");
+
+            // Obtém a amizade pelo ID da amizade
+            Friendship friendship = data.getFriendshipById((int)request.routeParans["idFriendship"]);
+
+            if (friendship == null)
+                return ResponseUtils.NotFound("Relacionamento não encontrado.");
+
+            // Verifica se ambos os usuários fazem parte da amizade
+            if (!((friendship.getIdInviter == currentUser.getId && friendship.getIdInvited == friendUser.getId) ||
+                  (friendship.getIdInviter == friendUser.getId && friendship.getIdInvited == currentUser.getId)))
+            {
+                return ResponseUtils.Conflict("Usuários não são amigos.");
+            }
+
+            // Verifica o status da amizade
+            if (friendship.getStatus.Equals(FriendshipStatus.pending))
+            {
+                return ResponseUtils.Conflict("Não é possível encerrar uma amizade pendente.");
+            }
+
+            // Remove a amizade da lista de amizades
+            data.deleteFriendship(friendship.getId);
+
+            // Remove os usuários das respectivas listas de amigos
+            currentUser.getFriends.Remove(friendUser);
+            friendUser.getFriends.Remove(currentUser);
+
+            JObject JsonResponse = new JObject
+            {
+                ["message"] = "Amizade Encerrada."
+            };
+
+            return ResponseUtils.JsonSuccessResponse(JsonResponse);
         }
+
 
         public static Response listInvitesByUser(Request request, Data data)
         {
-            User user = data.getUserById((int)request.routeParans["idCurrentUser"]);
+            User user = data.getUserById(data.getCurrentUser());
 
             if (user == null)
             {
-                return ResponseUtils.NotFound("Usuário não encontrado.");
+                return ResponseUtils.NotFound("Não há usuário ativo na sessão.");
             }
 
             List<Friendship> friendshipsList = data.getFriendships();

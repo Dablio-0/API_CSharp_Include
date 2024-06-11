@@ -9,8 +9,8 @@ namespace API_C_Sharp.Model
     public class Data
     {
         private List<User.User> usersList;
-        private List<Friendship> friendshipsList;
         private List<Post.Post> postsList;
+        private List<Friendship> friendshipsList;
         private List<Comment> commentsList;
         private List<Message> messageList;
         private int currentUser = -1;
@@ -58,6 +58,11 @@ namespace API_C_Sharp.Model
             }
         }
 
+        public void removeUser(int id)
+        {
+            usersList.Remove(this.getUserById(id));
+        }
+
         public void login(int userId)
         {
             this.currentUser = userId;
@@ -79,10 +84,10 @@ namespace API_C_Sharp.Model
             return ID;
         }
 
-        //public void popFriendship(Friendship friendship)
-        //{
-        //    friendshipsList.Remove(friendship);
-        //}
+        public void deleteFriendship(int id)
+        {
+            friendshipsList.Remove(this.getFriendshipById(id));
+        }
 
         public Friendship modifyFriendshipStatus(int idFriendship, FriendshipStatus status)
         {
@@ -154,6 +159,11 @@ namespace API_C_Sharp.Model
             return ID;
         }
 
+        public void deleteMessage(int id)
+        {
+            messageList.Remove(this.getMessageById(id));
+        }
+
         public Message getMessageById(int id)
         {
             return messageList.Find(message => message.getId == id);
@@ -222,6 +232,11 @@ namespace API_C_Sharp.Model
             return ID;
         }
 
+        public void deleteComment(int id)
+        {
+            commentsList.Remove(this.getCommentById(id));
+        }
+
         public List<Comment> getAllComments()
         {
             return commentsList;
@@ -234,11 +249,6 @@ namespace API_C_Sharp.Model
             commentsList.FindAll(comment => comment.getIdPost == idPost);
 
             return commentsListByPost;
-        }
-
-        public void deleteComment(int id)
-        {
-            commentsList.Remove(getCommentById(id));
         }
 
         public Comment getCommentById(int id)

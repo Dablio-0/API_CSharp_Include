@@ -88,6 +88,11 @@ namespace API_C_Sharp.Controller
             if (post == null)
                 return ResponseUtils.NotFound("Post não encontrado.");
 
+            foreach (Comment c in post.getCommentList)
+            {
+                data.deleteComment(c.getId);
+            }
+
             data.deletePost(post.getId);
 
             return ResponseUtils.JsonSuccessResponse(JObject.Parse("{id:" + post.getId + "}"));

@@ -15,7 +15,7 @@ namespace API_C_Sharp.Route
             #region Messages Interaction
             app.post("chat/friendship/{idFriendship:int}/message/send", ChatController.sendMessage);
             app.put("chat/frienship/{idFriendship:int}/message/{idMessage:int}/edit", ChatController.editMessage);
-            app.delete("chat/frienship/{idFriendship:int}/message/{idMessage:int}/delete", ChatController.editMessage);
+            app.delete("chat/frienship/{idFriendship:int}/message/{idMessage:int}/delete", ChatController.deleteMessage);
             #endregion
 
             #region List Messages (All Chat)

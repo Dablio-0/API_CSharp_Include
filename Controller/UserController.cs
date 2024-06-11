@@ -191,23 +191,23 @@ namespace API_C_Sharp.Controller
         }
         #endregion
 
-        #region Friendship and Notifications
-        public static Response getUserFriendship(Request request, Data data)
-        {
-            User user = data.getUserById((int)request.routeParans.GetValue("id"));
+        #region Notifications
+        //public static Response getUserFriendship(Request request, Data data)
+        //{
+        //    User user = data.getUserById((int)request.routeParans.GetValue("id"));
 
-            if (user == null)
-                return ResponseUtils.NotFound("Usuario não existe.");
+        //    if (user == null)
+        //        return ResponseUtils.NotFound("Usuario não existe.");
 
-            List<string> friendsList = new();
-            foreach (User friend in user.getFriends)
-                friendsList.Add(friend.serialize().ToString());
+        //    List<string> friendsList = new();
+        //    foreach (User friend in user.getFriends)
+        //        friendsList.Add(friend.serialize().ToString());
 
-            return ResponseUtils.JsonSuccessResponse(JObject.Parse(friendsList.ToString()));
+        //    return ResponseUtils.JsonSuccessResponse(JObject.Parse(friendsList.ToString()));
 
-        }
+        //}
 
-        public static Response getUserNotification(Request request, Data data)
+        public static Response getUserNotifications(Request request, Data data)
         {
             User user = data.getUserById((int)request.routeParans.GetValue("id"));
 
