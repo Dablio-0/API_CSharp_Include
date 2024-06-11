@@ -13,13 +13,13 @@ namespace API_C_Sharp.Route
         public ChatRoutes(Server app)
         {
             #region Messages Interaction
-            app.post("chat/friendship/{idFriendship:int}/message/send", ChatController.sendMessage);
-            app.put("chat/frienship/{idFriendship:int}/message/{idMessage:int}/edit", ChatController.editMessage);
-            app.delete("chat/frienship/{idFriendship:int}/message/{idMessage:int}/delete", ChatController.deleteMessage);
+            app.post("/chat/friendship/{idFriendship:int}/message/send", ChatController.sendMessage);
+            app.put("/chat/friendship/{idFriendship:int}/message/{idMessage:int}/edit", ChatController.editMessage);
+            app.delete("/chat/friendship/{idFriendship:int}/message/{idMessage:int}/delete", ChatController.deleteMessage);
             #endregion
 
             #region List Messages (All Chat)
-            app.get("chat/friendship/{idFriendship:int}/listMessage/{idUserFriend:int}", ChatController.listMessages);
+            app.get("/chat/friendship/{idFriendship:int}/listMessage/{idUserFriend:int}", ChatController.listMessages);
             #endregion
         }
     }

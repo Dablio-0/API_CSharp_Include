@@ -16,6 +16,7 @@ namespace API_C_Sharp
             new PostRoutes(app);
             new CommentRoutes(app);
             new FriendshipRoutes(app);
+            new ChatRoutes(app);
 
             app.Start(dataInstance);
 

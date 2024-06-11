@@ -1,6 +1,5 @@
 ﻿using API_C_Sharp.LSharp.HTTP;
 using API_C_Sharp.Model;
-using API_C_Sharp.Model.Post;
 using API_C_Sharp.Model.User;
 using API_C_Sharp.Model.User.Chat;
 using API_C_Sharp.Utils;
@@ -53,7 +52,7 @@ namespace API_C_Sharp.Controller
             }
 
             // Obtém o corpo da mensagem a partir da requisição
-            JObject bodyMessageJson = (JObject)request.body.GetValue("bodyComment");
+            JObject bodyMessageJson = (JObject)request.body.GetValue("bodyMessage");
 
             BodyMessage bodyMessage = new(
                 (string)bodyMessageJson.GetValue("text"),
@@ -68,19 +67,28 @@ namespace API_C_Sharp.Controller
 
             friendship.getChat.getMessageList.Add(messageAdded);
 
-            JObject JsonResponse = new JObject
+            foreach (Message message in friendship.getChat.getMessageList)
             {
-                ["id"] = messageId,
-                ["idChatFriendship"] = friendship.getId,
-                ["idAuthotMessage"] = currentUser.getId,
-                ["idReceivedMessage"] = userReceived.getId,
-                ["bodyMessage"] = JObject.FromObject(bodyMessage)
-                ["status"] = "Messagem enviada!"
-            };
+                Console.WriteLine("ID: " + message.getId);
+                Console.WriteLine("IdAuthorMessage: " + message.getIdAuthorMessage);
+                Console.WriteLine("IdUserReceived: " + message.getIdUserReceived);
+                Console.WriteLine("Texto: " + message.bodyMessage.text);
+                Console.WriteLine("Código: " + message.bodyMessage.code);
+                Console.WriteLine("Linguagem: " + message.bodyMessage.language);
+                Console.WriteLine("data de criação: " + message.getDate);
+                Console.WriteLine("data de atualização: " + message.getUpdateDate);
+                Console.WriteLine("----------------------------------");
+            }
 
-            return ResponseUtils.JsonSuccessResponse(JsonResponse);
+            return ResponseUtils.JsonSuccessResponse(new JObject(
+                new JProperty("id", messageId),
+                new JProperty("idChatFriendship", friendship.getId),
+                new JProperty("idAuthorMessage", currentUser.getId),
+                new JProperty("idReceivedMessage", userReceived.getId),
+                new JProperty("bodyMessage", bodyMessage.serialize()),
+                new JProperty("status", "Mensagem enviada!")
+                ));
         }
-
 
         public static Response editMessage(Request request, Data data)
         {
@@ -165,7 +173,58 @@ namespace API_C_Sharp.Controller
         }
         #endregion
 
-        #region List Messages (All Chat)
+        //#region List Messages (All Chat)
+        //public static Response listMessages(Request request, Data data)
+        //{
+        //    // Obtém a amizade pelo ID
+        //    Friendship friendship = data.getFriendshipById((int)request.routeParans["idFriendship"]);
+
+        //    if (friendship == null)
+        //        return ResponseUtils.NotFound("Relacionamento não encontrado.");
+
+        //    // Verifica o status da amizade
+        //    if (friendship.getStatus.Equals(FriendshipStatus.pending) ||
+        //        friendship.getStatus.Equals(FriendshipStatus.declined) ||
+        //        friendship.getStatus.Equals(FriendshipStatus.blocked) ||
+        //        friendship.getStatus.Equals(FriendshipStatus.terminated))
+        //    {
+        //        return ResponseUtils.Conflict("O Chat não existe pois não existe amizade.");
+        //    }
+
+        //    // Obtém o usuário atual da sessão
+        //    User currentUser = data.getUserById(data.getCurrentUser());
+
+        //    if (currentUser == null)
+        //        return ResponseUtils.Unauthorized("Não há usuário ativo na sessão.");
+
+        //    // Obtém o amigo a partir do ID do parâmetro da rota
+        //    User userFriend = data.getUserById((int)request.routeParans["idUserFriend"]);
+
+        //    if (userFriend == null)
+        //        return ResponseUtils.NotFound("Usuário não encontrado.");
+
+        //    // Verifica se ambos os usuários fazem parte da amizade
+        //    if (!((friendship.getIdInviter == currentUser.getId && friendship.getIdInvited == userFriend.getId) ||
+        //          (friendship.getIdInviter == userFriend.getId && friendship.getIdInvited == currentUser.getId)))
+        //    {
+        //        return ResponseUtils.Conflict("Usuários não são amigos.");
+        //    }
+
+        //    // Verifica se o chat está vazio
+        //    if (friendship.getChat.getMessageList.Count == 0)
+        //        return ResponseUtils.NotFound("Chat vazio.");
+
+        //    // Cria uma lista de mensagens em formato JSON
+        //    JArray messageList = new JArray();
+        //    foreach (Message message in friendship.getChat.getMessageList)
+        //    {
+        //        messageList.Add(message.serialize());
+        //    }
+
+        //    return ResponseUtils.JsonSuccessResponse(messageList);
+        //}
+        //#endregion
+
         public static Response listMessages(Request request, Data data)
         {
             // Obtém a amizade pelo ID
@@ -180,7 +239,7 @@ namespace API_C_Sharp.Controller
                 friendship.getStatus.Equals(FriendshipStatus.blocked) ||
                 friendship.getStatus.Equals(FriendshipStatus.terminated))
             {
-                return ResponseUtils.Conflict("O Chat não existe pois não existe amizade.");
+                return ResponseUtils.Conflict("O Chat não existe pois não existe amizade ou está bloqueado.");
             }
 
             // Obtém o usuário atual da sessão
@@ -203,19 +262,56 @@ namespace API_C_Sharp.Controller
             }
 
             // Verifica se o chat está vazio
-            if (friendship.getChat.getMessageList.Count == 0)
+            if (friendship.getChat == null || friendship.getChat.getMessageList == null || friendship.getChat.getMessageList.Count == 0)
                 return ResponseUtils.NotFound("Chat vazio.");
 
             // Cria uma lista de mensagens em formato JSON
             JArray messageList = new JArray();
             foreach (Message message in friendship.getChat.getMessageList)
             {
+                if (message == null)
+                {
+                    continue; // Ignorar mensagens nulas
+                }
                 messageList.Add(message.serialize());
             }
 
             return ResponseUtils.JsonSuccessResponse(messageList);
         }
-        #endregion
+
+
+        public static Response listMessages(Request request, Data data)
+        {
+            Friendship friendship = data.getFriendshipById((int)request.routeParans["idFriendship"]);
+
+            if (friendship == null)
+                return ResponseUtils.NotFound("Relacionamento não encontrado.");
+
+            // Obtém o usuário atual da sessão
+            User currentUser = data.getUserById(data.getCurrentUser());
+
+            if (currentUser == null)
+                return ResponseUtils.Unauthorized("Não há usuário ativo na sessão.");
+
+            // Obtém o amigo a partir do ID do parâmetro da rota
+            User userFriend = data.getUserById((int)request.routeParans["idUserFriend"]);
+
+            if (userFriend == null)
+                return ResponseUtils.NotFound("Usuário não encontrado.");
+
+            // Verifica se ambos os usuários fazem parte da amizade
+            if (!((friendship.getIdInviter == currentUser.getId && friendship.getIdInvited == userFriend.getId) ||
+                  (friendship.getIdInviter == userFriend.getId && friendship.getIdInvited == currentUser.getId)))
+            {
+                return ResponseUtils.Conflict("Usuários não são amigos.");
+            }
+
+            // Verifica se o chat está vazio
+            if (friendship.getChat == null || friendship.getChat.getMessageList == null || friendship.getChat.getMessageList.Count == 0)
+                return ResponseUtils.NotFound("Chat vazio.");
+
+
+        }
 
     }
 }

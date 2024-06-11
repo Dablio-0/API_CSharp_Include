@@ -2,6 +2,7 @@
 using API_C_Sharp.Model.Post;
 using API_C_Sharp.Model.User;
 using API_C_Sharp.Model.User.Chat;
+using API_C_Sharp.Utils;
 using System.Security.Cryptography.X509Certificates;
 
 namespace API_C_Sharp.Model
@@ -21,6 +22,7 @@ namespace API_C_Sharp.Model
             friendshipsList = new();
             postsList = new();
             commentsList = new();
+            messageList = new();
         }
 
         #region Data Users Methods
@@ -167,6 +169,23 @@ namespace API_C_Sharp.Model
         public Message getMessageById(int id)
         {
             return messageList.Find(message => message.getId == id);
+        }
+
+        public List<Message> getMessagesByUser(int id)
+        {
+            User.User user = this.getUserById(this.currentUser);
+
+            List<Message> userMessages = new();
+
+            foreach (Message m in messageList)
+            {
+                if (user.getId == m.getIdAuthorMessage || user.getId == m.getIdUserReceived)
+                {
+                    userMessages.Add(m);
+                }
+            }
+
+            return userMessages;
         }
 
         #endregion
