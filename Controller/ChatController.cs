@@ -45,8 +45,7 @@ namespace API_C_Sharp.Controller
             // Verifica o status da amizade
             if (friendship.getStatus.Equals(FriendshipStatus.pending) ||
                 friendship.getStatus.Equals(FriendshipStatus.declined) ||
-                friendship.getStatus.Equals(FriendshipStatus.blocked) ||
-                friendship.getStatus.Equals(FriendshipStatus.terminated))
+                friendship.getStatus.Equals(FriendshipStatus.blocked))
             {
                 return ResponseUtils.Conflict("Você não pode enviar mensagens para um relacionamento pendente, recusado, bloqueado ou terminado.");
             }
@@ -84,8 +83,7 @@ namespace API_C_Sharp.Controller
 
             if (friendship.getStatus.Equals(FriendshipStatus.pending) ||
                 friendship.getStatus.Equals(FriendshipStatus.declined) ||
-                friendship.getStatus.Equals(FriendshipStatus.blocked) ||
-                friendship.getStatus.Equals(FriendshipStatus.terminated))
+                friendship.getStatus.Equals(FriendshipStatus.blocked))
             {
                 return ResponseUtils.Conflict("Você não pode editar mensagens em um relacionamento pendente, recusado, bloqueado ou terminado.");
             }
@@ -139,8 +137,7 @@ namespace API_C_Sharp.Controller
 
             if (friendship.getStatus.Equals(FriendshipStatus.pending) ||
                 friendship.getStatus.Equals(FriendshipStatus.declined) ||
-                friendship.getStatus.Equals(FriendshipStatus.blocked) ||
-                friendship.getStatus.Equals(FriendshipStatus.terminated))
+                friendship.getStatus.Equals(FriendshipStatus.blocked))
             {
                 return ResponseUtils.Conflict("Você não pode deletar mensagens em um relacionamento pendente, recusado, bloqueado ou terminado.");
             }
