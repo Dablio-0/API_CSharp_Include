@@ -77,11 +77,11 @@ namespace API_C_Sharp.Model
         #endregion
 
         #region Data Friendship Methods
-        public int addFrienship(int idInviter, int userInvited, FriendshipStatus status, Chat chat)
+        public int addFrienship(int idInviter, int userInvited, FriendshipStatus status)
         {
-            int ID = friendshipsList.Count();
+            int ID = messageList.Count > 0 ? messageList.Max(p => p.getId) + 1 : 0;
 
-            friendshipsList.Add(new Friendship(ID, idInviter, userInvited, status, chat));
+            friendshipsList.Add(new Friendship(ID, idInviter, userInvited, status));
 
             return ID;
         }
@@ -154,7 +154,7 @@ namespace API_C_Sharp.Model
         #region Data Meessage Methods
         public int addMessage(int idChatFriendshp, int idAuthorMessage, int idUserReceiced, BodyMessage bodyMessage)
         {
-            int ID = messageList.Count();
+            int ID = messageList.Count > 0 ? messageList.Max(p => p.getId) + 1 : 0;
 
             messageList.Add(new Message(ID, idChatFriendshp, idAuthorMessage, idUserReceiced, bodyMessage));
 
@@ -173,7 +173,7 @@ namespace API_C_Sharp.Model
 
         public List<Message> getMessagesByUser(int id)
         {
-            User.User user = this.getUserById(this.currentUser);
+            User.User user = this.getUserById(id);
 
             List<Message> userMessages = new();
 
@@ -214,7 +214,7 @@ namespace API_C_Sharp.Model
 
         public int addPost(int idAuthor, string title, BodyContent body)
         {
-            int ID = postsList.Count();
+            int ID = postsList.Count > 0 ? postsList.Max(p => p.getId) + 1 : 0;
 
             postsList.Add(new Post.Post(ID, idAuthor, title, body));
 
@@ -244,7 +244,7 @@ namespace API_C_Sharp.Model
         #region Data Comment Methods
         public int addComment(int idAuthor, int idPost, BodyCommentContent bodyComment)
         {
-            int ID = commentsList.Count();
+            int ID = commentsList.Count > 0 ? commentsList.Max(p => p.getId) + 1 : 0;
 
             commentsList.Add(new Comment(ID, idAuthor, idPost, bodyComment));
 

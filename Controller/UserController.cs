@@ -3,6 +3,7 @@ using API_C_Sharp.Model;
 using API_C_Sharp.Model.Post;
 using API_C_Sharp.Model.User;
 using API_C_Sharp.Utils;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Specialized;
 using System.Data;
@@ -142,15 +143,19 @@ namespace API_C_Sharp.Controller
         {
             Console.WriteLine(data.getUsers());
 
-            JArray usersList = new();
-            foreach (User user in data.getUsers())
-                usersList.Add(user.serialize());
+            List<User> usersList = data.getUsers();
 
             if (usersList.Count == 0)
                 return ResponseUtils.NotFound("Não há usuários criados.");
 
+            var settings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
 
-            return ResponseUtils.JsonSuccessResponse(usersList);
+            JArray usersResponse = JArray.FromObject(usersList, JsonSerializer.Create(settings));
+
+            return ResponseUtils.JsonSuccessResponse(usersResponse);
         }
         #endregion
 

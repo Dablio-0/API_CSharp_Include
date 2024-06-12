@@ -41,7 +41,7 @@ namespace API_C_Sharp.Controller
             }
 
             // Cria um novo convite de amizade
-            int friendshipId = data.addFrienship(idInviter, userInvited.getId, FriendshipStatus.pending, null);
+            int friendshipId = data.addFrienship(idInviter, userInvited.getId, FriendshipStatus.pending);
 
             JObject responseJson = new JObject
             {
@@ -66,7 +66,6 @@ namespace API_C_Sharp.Controller
             else
             {
                 friendship.setStatus = FriendshipStatus.accepted;
-                friendship.setChat = new Chat();
 
                 User currentUser = data.getUserById(data.getCurrentUser());
 
