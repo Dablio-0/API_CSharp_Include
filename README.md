@@ -41,7 +41,7 @@ Represents the system's creation files, which are:
 ### Route
 Contains route files with their respective controllers for each route file.
 
-For example, if we have `ChatRoutes`, we will have a `ChatController`, and vice versa.
+For example, if we have `ChatRoutes`, we will have a `ChatController`. The reverse is also!
 
 ### Utils
 Auxiliary tools to support validation, such as regex.
