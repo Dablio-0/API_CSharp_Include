@@ -2,6 +2,7 @@
 
 namespace API_C_Sharp.Model.User
 {
+    #region Status for a Friendship (enum class)
     public enum FriendshipStatus
     {
         pending,
@@ -9,14 +10,18 @@ namespace API_C_Sharp.Model.User
         declined,
         blocked
     }
+    #endregion
 
     public class Friendship
     {
+        #region Attributes
         private int id;
         private int idInviter;
         private int idInvited;
         public FriendshipStatus status;
+        #endregion
 
+        #region Constructor
         public Friendship(int id, int idInviter, int idInvited, FriendshipStatus status)
         {
             this.id = id;
@@ -24,7 +29,9 @@ namespace API_C_Sharp.Model.User
             this.idInvited = idInvited;
             this.status = FriendshipStatus.pending;
         }
+        #endregion
 
+        #region Gets e Sets
         public int getId { get { return id; } }
 
         public int setId { set { id = value; } }
@@ -40,11 +47,7 @@ namespace API_C_Sharp.Model.User
         public FriendshipStatus getStatus { get { return status; } }
 
         public FriendshipStatus setStatus { set { status = value; } }
-
-        public Boolean End() { return true; }
-
-        public Boolean check(int inviter, int invited) { return true; }
-
+        #endregion 
 
         #region Serialization for JSON
         public JObject serialize()

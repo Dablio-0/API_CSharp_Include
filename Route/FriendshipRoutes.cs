@@ -22,7 +22,7 @@ namespace API_C_Sharp.Route
             #endregion
 
             #region Friendship
-            app.get("/friendship/user/{idUser:int}/list", FriendshipController.listFriendshipByUser);
+            app.get("/friendship/user/{idUser:int}/list", FriendshipController.listFriendsByUser);
 
             // Manage Friendship
             app.post("/friendships/userLogged/friend/{idUserFriend:int}/block", FriendshipController.blockFriend);

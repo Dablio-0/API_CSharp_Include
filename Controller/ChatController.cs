@@ -15,9 +15,10 @@ namespace API_C_Sharp.Controller
 {
     public class ChatController
     {
+
+        #region Send Message
         public static Response sendMessage(Request request, Data data)
         {
-            #region Message Interaction
             Friendship friendship = data.getFriendshipById((int)request.routeParans["idFriendship"]);
 
             if (friendship == null)
@@ -73,7 +74,9 @@ namespace API_C_Sharp.Controller
                 new JProperty("status", "Mensagem enviada!")
                 ));
         }
+        #endregion
 
+        #region Edit Message
         public static Response editMessage(Request request, Data data)
         {
             Friendship friendship = data.getFriendshipById((int)request.routeParans["idFriendship"]);
@@ -127,7 +130,9 @@ namespace API_C_Sharp.Controller
 
             return ResponseUtils.Conflict("Mensagem não editarda.");
         }
+        #endregion
 
+        #region Delete Message
         public static Response deleteMessage(Request request, Data data)
         {
             Friendship friendship = data.getFriendshipById((int)request.routeParans["idFriendship"]);

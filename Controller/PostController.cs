@@ -132,24 +132,24 @@ namespace API_C_Sharp.Controller
         }
         #endregion
 
-        //#region List of Comments by Post
-        //public static Response getPostCommentList(Request request, Data data)
-        //{
-        //    Post post = data.getPostById((int)request.routeParans.GetValue("idPost"));
+        #region List of Comments by Post
+        public static Response getPostCommentList(Request request, Data data)
+        {
+            Post post = data.getPostById((int)request.routeParans.GetValue("idPost"));
 
-        //    if (post == null)
-        //        return ResponseUtils.NotFound("Post não encontrado.");
+            if (post == null)
+                return ResponseUtils.NotFound("Post não encontrado.");
 
-        //    JArray commentListByPost = new();
-        //    foreach (Comment comment in post.getCommentList)
-        //        commentListByPost.Add(comment.serialize());
+            JArray commentListByPost = new();
+            foreach (Comment comment in post.getCommentList)
+                commentListByPost.Add(comment.serialize());
 
-        //    if (commentListByPost.Count == 0)
-        //        return ResponseUtils.NotFound("Não há comentários nesse post.");
+            if (commentListByPost.Count == 0)
+                return ResponseUtils.NotFound("Não há comentários nesse post.");
 
-        //    return ResponseUtils.JsonSuccessResponse(commentListByPost);
-        //}
-        //#endregion
+            return ResponseUtils.JsonSuccessResponse(commentListByPost);
+        }
+        #endregion
 
         #region Interaction
         public static Response like(Request request, Data data)

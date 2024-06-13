@@ -54,6 +54,7 @@ namespace API_C_Sharp.Controller
         }
         #endregion
 
+        #region Accept Invite
         public static Response acceptInvite(Request request, Data data)
         {
             Friendship friendship = data.getFriendshipById((int)request.routeParans["idFriendship"]);
@@ -85,7 +86,9 @@ namespace API_C_Sharp.Controller
 
             return ResponseUtils.JsonSuccessResponse(JsonResponse);
         }
+        #endregion
 
+        #region Reject Invite
         public static Response rejectInvite(Request request, Data data)
         {
             Friendship friendship = data.getFriendshipById((int)request.routeParans["idFriendship"]);
@@ -109,13 +112,16 @@ namespace API_C_Sharp.Controller
 
             return ResponseUtils.JsonSuccessResponse(JsonResponse);
         }
+        #endregion
 
-
+        #region Block Friend
         public static Response blockFriend(Request request, Data data)
         {
             return new Response();
         }
+        #endregion
 
+        #region Terminate Friendship
         public static Response terminateFriendship(Request request, Data data)
         {
             // Obtém o usuário atual da sessão
@@ -167,8 +173,9 @@ namespace API_C_Sharp.Controller
 
             return ResponseUtils.JsonSuccessResponse(JsonResponse);
         }
+        #endregion
 
-
+        #region Lit Invites by User
         public static Response listInvitesByUser(Request request, Data data)
         {
             User user = data.getUserById(data.getCurrentUser());
@@ -201,8 +208,10 @@ namespace API_C_Sharp.Controller
 
             return ResponseUtils.JsonSuccessResponse(responseJson);
         }
+        #endregion 
 
-        public static Response listFriendshipByUser(Request request, Data data)
+        #region List of Friends by User
+        public static Response listFriendsByUser(Request request, Data data)
         {
             User user = data.getUserById((int)request.routeParans["idUser"]);
 
@@ -211,14 +220,27 @@ namespace API_C_Sharp.Controller
 
             List<User> friendsList = user.getFriends;
 
-            var settings = new JsonSerializerSettings
+            // Cria o JSON para o usuário atual
+            JObject userJson = new JObject
             {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                ["id"] = user.getId,
+                ["name"] = user.getName,
+                ["email"] = user.getEmail
             };
 
-            JArray friends = JArray.FromObject(friendsList, JsonSerializer.Create(settings));
+            // Cria o JSON para a lista de IDs dos amigos
+            JArray idsUserFriends = new JArray();
 
-            return ResponseUtils.JsonSuccessResponse(friends);
+            foreach (User friend in friendsList)
+            {
+                idsUserFriends.Add(friend.getId);
+            }
+
+            // Adiciona a lista de IDs dos amigos ao JSON do usuário
+            userJson["idFriends"] = idsUserFriends;
+
+            return ResponseUtils.JsonSuccessResponse(userJson);
         }
+        #endregion
     }
 }

@@ -141,21 +141,32 @@ namespace API_C_Sharp.Controller
         #region All Users
         public static Response list(Request request, Data data)
         {
-            Console.WriteLine(data.getUsers());
-
             List<User> usersList = data.getUsers();
 
             if (usersList.Count == 0)
-                return ResponseUtils.NotFound("Não há usuários criados.");
-
-            var settings = new JsonSerializerSettings
             {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
+                return ResponseUtils.NotFound("Não há usuários criados.");
+            }
 
-            JArray usersResponse = JArray.FromObject(usersList, JsonSerializer.Create(settings));
+            JArray usersArray = new JArray();
 
-            return ResponseUtils.JsonSuccessResponse(usersResponse);
+            foreach (User user in usersList)
+            {
+                JObject userJson = new JObject
+                {
+                    ["id"] = user.getId,
+                    ["name"] = user.getName,
+                    ["email"] = user.getEmail,
+                    ["imageIconProfile"] = user.getImageIconProfile,
+                    ["birthDate"] = user.getBirthDate,
+                    ["skills"] = JArray.FromObject(user.getSkills),
+                    ["jobs"] = JArray.FromObject(user.getJobs)
+                };
+
+                usersArray.Add(userJson);
+            }
+
+            return ResponseUtils.JsonSuccessResponse(usersArray);
         }
         #endregion
 
@@ -211,7 +222,9 @@ namespace API_C_Sharp.Controller
         //    return ResponseUtils.JsonSuccessResponse(JObject.Parse(friendsList.ToString()));
 
         //}
+        #endregion
 
+        #region Get User notifications
         public static Response getUserNotifications(Request request, Data data)
         {
             User user = data.getUserById((int)request.routeParans.GetValue("id"));

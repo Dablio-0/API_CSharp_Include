@@ -10,6 +10,7 @@ namespace API_C_Sharp.Model.User.Chat
 {
     public class Message
     {
+        #region Attributes
         private int id;
         private int idChatFriendship;
         private int idAuthorMessage;
@@ -17,7 +18,9 @@ namespace API_C_Sharp.Model.User.Chat
         public BodyMessage bodyMessage;
         private DateTime date;
         public DateTime updateDate;
+        #endregion
 
+        #region Constructor
         public Message(int id, int idChatFriendship, int idAuthorMessage, int idUserReceived, BodyMessage bodyMessage)
         {
             this.id = id;
@@ -28,6 +31,7 @@ namespace API_C_Sharp.Model.User.Chat
             this.date = DateTime.Now;
             this.updateDate = DateTime.Now;
         }
+        #endregion
 
         #region Gets e Sets
         public int getId { get { return id; } }

@@ -80,15 +80,6 @@ namespace API_C_Sharp.Controller
                         new JProperty("date", comment.getDate),
                         new JProperty("updateDate", comment.getUpdateDate)
                         ));
-
-                    //return ResponseUtils.JsonSuccessResponse(JObject.Parse("{" +
-                    //      "id:" + comment.getId + ", " +
-                    //      "idAuthor: " + comment.getIdAuthorComment + ", " +
-                    //      "idPost: " + comment.getIdPost + ", " +
-                    //      "bodyComment: " + comment.bodyComment.serialize() + ", " +
-                    //      "date: " + comment.getDate + ", " +
-                    //      "updateDate: " + comment.getUpdateDate + ", " +
-                    //      " }"));
                 }
             }
 
@@ -113,13 +104,6 @@ namespace API_C_Sharp.Controller
                 if (c.getId == comment.getId)
                 {
                     post.getCommentList.Remove(c);
-
-                    //return ResponseUtils.JsonSuccessResponse(JObject.Parse("{" +
-                    //                    "id:" + comment.getId + ", " +
-                    //                    "idAuthor: " + comment.getIdAuthorComment + ", " +
-                    //                    "idPost: " + comment.getIdPost + ", " +
-                    //                    "body: " + comment.bodyComment.serialize() + ", " +
-                    //                    " }"));
 
                     return ResponseUtils.JsonSuccessResponse(JObject.Parse("{id:" + comment.getId + "}"));
                 }
