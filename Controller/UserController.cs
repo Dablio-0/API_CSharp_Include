@@ -178,7 +178,19 @@ namespace API_C_Sharp.Controller
             if (user == null)
                 return ResponseUtils.NotFound("Usuario não existe.");
 
-            return ResponseUtils.JsonSuccessResponse(user.serialize());
+
+            JObject JsonResponse = new JObject
+            {
+                ["id"] = user.getId,
+                ["name"] = user.getName,
+                ["email"] = user.getEmail,
+                ["imageIconProfile"] = user.getImageIconProfile,
+                ["birthDate"] = user.getBirthDate,
+                ["skills"] = JArray.FromObject(user.getSkills),
+                ["jobs"] = JArray.FromObject(user.getJobs)
+            };
+
+            return ResponseUtils.JsonSuccessResponse(JsonResponse);
         }
         #endregion
 
