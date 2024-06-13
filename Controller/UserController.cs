@@ -30,6 +30,7 @@ namespace API_C_Sharp.Controller
             if (user == null)
                 return ResponseUtils.Unauthorized("Usuário ou senha inválidos.");
 
+            /* Check password pattern */
             if (!user.checkPassword(password))
                 return ResponseUtils.Unauthorized("Usuário ou senha inválidos.");
 
@@ -41,11 +42,13 @@ namespace API_C_Sharp.Controller
 
         public static Response userLogged(Request request, Data data)
         {
+            /* Get the current user by id */
             User user = data.getUserById(data.getCurrentUser());
 
             if (user == null)
                 return ResponseUtils.NotFound("Não há nenhum login ativo.");
 
+            /* Makes the Json response */
             JObject JsonResponse = new JObject
             {
                 ["id"] = user.getId,
@@ -83,10 +86,15 @@ namespace API_C_Sharp.Controller
 
         public static Response update(Request request, Data data)
         {
+            /* Get the user by id from the route */
             User user = data.getUserById((int)request.routeParans.GetValue("id"));
 
             if (user == null)
                 return ResponseUtils.NotFound("Usuario não existe.");
+
+            /** 
+             * Get values from json body
+             */
 
             string name = (string)request.body.GetValue("name");
             string email = (string)request.body.GetValue("email");
@@ -115,6 +123,7 @@ namespace API_C_Sharp.Controller
             foreach (string job in jobs)
                 jobsList.Add(job.ToString());
 
+            /* Set new values */
             user.setName = name;
             user.setEmail = email;
             user.setPassword = password;
@@ -122,18 +131,23 @@ namespace API_C_Sharp.Controller
             user.setBirthDate = birthDate;
             user.setSkills = skillsList;
             user.setJobs = jobsList;
+
+            /* Return the user updated */
             return ResponseUtils.JsonSuccessResponse(user.serialize());
         }
 
         public static Response delete(Request request, Data data)
         {
+            /* Get the user by id from the route */
             User user = data.getUserById((int)request.routeParans.GetValue("id"));
 
             if (user == null)
                 return ResponseUtils.NotFound("Usuario não existe.");
 
+            /* Remove the user from the list */
             data.getUsers().Remove(user);
 
+            /* Return the user updated */
             return ResponseUtils.JsonSuccessResponse(JObject.Parse("{message: 'Usuario deletado com sucesso.'}"));
         }
         #endregion
@@ -141,6 +155,7 @@ namespace API_C_Sharp.Controller
         #region All Users
         public static Response list(Request request, Data data)
         {
+            /* Get all users from the global list in data class */
             List<User> usersList = data.getUsers();
 
             if (usersList.Count == 0)
@@ -150,6 +165,9 @@ namespace API_C_Sharp.Controller
 
             JArray usersArray = new JArray();
 
+            /** 
+             * Serialize all users and add to the array
+             */
             foreach (User user in usersList)
             {
                 JObject userJson = new JObject
@@ -166,6 +184,7 @@ namespace API_C_Sharp.Controller
                 usersArray.Add(userJson);
             }
 
+            /* Return the list of users */
             return ResponseUtils.JsonSuccessResponse(usersArray);
         }
         #endregion
@@ -173,12 +192,13 @@ namespace API_C_Sharp.Controller
         #region Get User by ID
         public static Response getUserById(Request request, Data data)
         {
+            /* Get the user by id from the route */
             User user = data.getUserById((int)request.routeParans.GetValue("id"));
 
             if (user == null)
                 return ResponseUtils.NotFound("Usuario não existe.");
 
-
+            /* Makes the Json response to serialize the unique user is going to return */
             JObject JsonResponse = new JObject
             {
                 ["id"] = user.getId,
@@ -190,6 +210,7 @@ namespace API_C_Sharp.Controller
                 ["jobs"] = JArray.FromObject(user.getJobs)
             };
 
+            /* Return the user */
             return ResponseUtils.JsonSuccessResponse(JsonResponse);
         }
         #endregion
@@ -197,12 +218,19 @@ namespace API_C_Sharp.Controller
         #region List of Post by User
         public static Response listPostByUser(Request request, Data data)
         {
+            /* Get the user by id from the route */
             User user = data.getUserById((int)request.routeParans.GetValue("idUser"));
 
             if (user == null)
             {
                 return ResponseUtils.NotFound("Usuario não existe.");
             }
+
+            /**
+             * Get all posts from the global list in data class
+             * 
+             * And filter the posts by the user id
+             * */
 
             List<Post> posts = new List<Post>();
             foreach (Post post in data.getPosts())
@@ -211,10 +239,12 @@ namespace API_C_Sharp.Controller
                     posts.Add(post);
             }
 
+            /* Makes the Json response to serialize all posts by the user */
             JArray postListByUser = new();
             foreach (Post post in posts)
                 postListByUser.Add(post.serialize());
 
+            /* Return the list of posts by the user */
             return ResponseUtils.JsonSuccessResponse(postListByUser);
         }
         #endregion

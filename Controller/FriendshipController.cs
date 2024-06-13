@@ -18,31 +18,33 @@ namespace API_C_Sharp.Controller
         #region Create Friendship Instance (Pendingg Status)
         public static Response sendFriendshipInvite(Request request, Data data)
         {
-            // Obtém o usuário a ser convidado e o usuário logado
+            /* Get the user from the ID in the route parameters */
             User userInvited = data.getUserById((int)request.routeParans["idUserInvited"]);
 
             if (userInvited.getId.Equals(data.getCurrentUser()))
                 return ResponseUtils.Conflict("Não é possível enviar um convite para si mesmo.");
 
+            /* Get the user by the ID of the logged in user */
             int idInviter = data.getCurrentUser();
 
-            // Verifica se o usuário logado já é amigo do usuário convidado
+            /* Verifies if the logged in user is already a friend of the invited user */
             if (userInvited.getFriends.Any(friend => friend.getId == idInviter))
-            {
                 return ResponseUtils.Conflict("Você já é amigo desse usuário.");
-            }
-
-            // Verifica se já existe um convite pendente
+            
+            /* Verifies if there is already a pending friendship between the logged in user and the invited user */
             bool inviteExists = data.getFriendshipsPending()
                                     .Any(f => f.getIdInviter == idInviter && f.getIdInvited == userInvited.getId);
             if (inviteExists)
-            {
                 return ResponseUtils.Conflict("Você já enviou um convite para esse usuário.");
-            }
 
-            // Cria um novo convite de amizade
+            /** 
+             * If all the validations are correct, the friendship is created with the 
+             * pending status and after then returns the Json Response
+             */
+
             int friendshipId = data.addFrienship(idInviter, userInvited.getId, FriendshipStatus.pending);
 
+            /* Make the JSON response */
             JObject responseJson = new JObject
             {
                 ["id"] = friendshipId,
@@ -57,15 +59,23 @@ namespace API_C_Sharp.Controller
         #region Accept Invite
         public static Response acceptInvite(Request request, Data data)
         {
+            /* Get the friendship by the ID in the route parameters */
             Friendship friendship = data.getFriendshipById((int)request.routeParans["idFriendship"]);
 
             if (friendship == null)
                 return ResponseUtils.NotFound("Convite não encontrado.");
 
+            /* Verifies if the friendship is already accepted */
             if (friendship.getStatus.Equals(FriendshipStatus.accepted))
                 return ResponseUtils.Conflict("Convite já aceito.");
             else
             {
+                /**
+                 * If the friendship is not accepted, the status is changed to accepted
+                 * 
+                 * The both users are added to the friends list of each other
+                 */
+
                 friendship.setStatus = FriendshipStatus.accepted;
 
                 User currentUser = data.getUserById(data.getCurrentUser());
@@ -77,6 +87,7 @@ namespace API_C_Sharp.Controller
                 friendAdded.getFriends.Add(currentUser);
             }
 
+            /* Make the JSON response */
             JObject JsonResponse = new JObject
             {
                 ["id"] = friendship.getId,
@@ -91,18 +102,22 @@ namespace API_C_Sharp.Controller
         #region Reject Invite
         public static Response rejectInvite(Request request, Data data)
         {
+            /* Get the friendship by the ID in the route parameters */
             Friendship friendship = data.getFriendshipById((int)request.routeParans["idFriendship"]);
 
             if (friendship == null)
                 return ResponseUtils.NotFound("Convite recusado.");
 
+            /* Verifies if the friendship is already declined */
             if (friendship.getStatus.Equals(FriendshipStatus.declined))
                 return ResponseUtils.Conflict("Convite já recusado.");
             else
             {
+                /* If the friendship is not declined, the status is changed to declined */
                 friendship.setStatus = FriendshipStatus.declined;
             }
-
+            
+            /* Make the JSON response */
             JObject JsonResponse = new JObject
             {
                 ["id"] = friendship.getId,
@@ -124,48 +139,52 @@ namespace API_C_Sharp.Controller
         #region Terminate Friendship
         public static Response terminateFriendship(Request request, Data data)
         {
-            // Obtém o usuário atual da sessão
+            /* Get the user by the ID of the logged in user */
             User currentUser = data.getUserById(data.getCurrentUser());
 
             if (currentUser == null)
                 return ResponseUtils.NotFound("Não há usuário ativo na sessão.");
 
-            // Obtém o amigo a partir do ID do parâmetro da rota
+            /* Get the friend from the ID of the route parameter */
             User friendUser = data.getUserById((int)request.routeParans["idUserFriend"]);
 
             if (friendUser == null)
                 return ResponseUtils.NotFound("Usuário não encontrado.");
 
-            // Verifica se o usuário logado e o usuário da rota são diferentes
+            /* Verifies if the logged in user and the user from the route are different */
             if (currentUser.getId == friendUser.getId)
                 return ResponseUtils.Conflict("Você não pode encerrar amizade consigo mesmo.");
 
-            // Obtém a amizade pelo ID da amizade
+            /* Get the friendship by the ID in the route parameters */
             Friendship friendship = data.getFriendshipById((int)request.routeParans["idFriendship"]);
 
             if (friendship == null)
                 return ResponseUtils.NotFound("Relacionamento não encontrado.");
 
-            // Verifica se ambos os usuários fazem parte da amizade
+            /* Verifies if both users are part of the friendship */
             if (!((friendship.getIdInviter == currentUser.getId && friendship.getIdInvited == friendUser.getId) ||
                   (friendship.getIdInviter == friendUser.getId && friendship.getIdInvited == currentUser.getId)))
             {
                 return ResponseUtils.Conflict("Usuários não são amigos.");
             }
 
-            // Verifica o status da amizade
+            /* Verifies if the friendship is a pending friendship */
             if (friendship.getStatus.Equals(FriendshipStatus.pending))
             {
                 return ResponseUtils.Conflict("Não é possível encerrar uma amizade pendente.");
             }
 
-            // Remove a amizade da lista de amizades
+            /** 
+             * If all the validations are correct, the friendship is deleted
+             * 
+             * The both users are removed from the friends list of each other
+             */
             data.deleteFriendship(friendship.getId);
 
-            // Remove os usuários das respectivas listas de amigos
             currentUser.getFriends.Remove(friendUser);
             friendUser.getFriends.Remove(currentUser);
 
+            /* Make the JSON response */
             JObject JsonResponse = new JObject
             {
                 ["message"] = "Amizade Encerrada."
@@ -178,12 +197,21 @@ namespace API_C_Sharp.Controller
         #region Lit Invites by User
         public static Response listInvitesByUser(Request request, Data data)
         {
+            /* Get the user by the ID of the logged in user */
             User user = data.getUserById(data.getCurrentUser());
 
             if (user == null)
             {
                 return ResponseUtils.NotFound("Não há usuário ativo na sessão.");
             }
+
+            /**
+             * From the list of friendships, the method separates the invitations sent and received
+             * 
+             * In if condition the method verifies if the friendship is pending and if the user is the inviter or the invited
+             * 
+             * Then the friendship is added to the list of invitations sent or received
+             */
 
             List<Friendship> friendshipsList = data.getFriendships();
             List<Friendship> invitationsSent = new();
@@ -200,6 +228,7 @@ namespace API_C_Sharp.Controller
                 }
             }
 
+            /* Make the JSON response */
             JObject responseJson = new JObject
             {
                 ["invitationsSent"] = JArray.FromObject(invitationsSent),
@@ -213,14 +242,16 @@ namespace API_C_Sharp.Controller
         #region List of Friends by User
         public static Response listFriendsByUser(Request request, Data data)
         {
+            /* Get the user by the ID of the route parameter */
             User user = data.getUserById((int)request.routeParans["idUser"]);
 
             if (user == null)
                 return ResponseUtils.NotFound("Usuário não encontrado.");
 
+            /* Get the list of friends of the user */
             List<User> friendsList = user.getFriends;
 
-            // Cria o JSON para o usuário atual
+            /* Make the Json with a active user information and the list of friends with their IDs */
             JObject userJson = new JObject
             {
                 ["id"] = user.getId,
@@ -228,7 +259,6 @@ namespace API_C_Sharp.Controller
                 ["email"] = user.getEmail
             };
 
-            // Cria o JSON para a lista de IDs dos amigos
             JArray idsUserFriends = new JArray();
 
             foreach (User friend in friendsList)
@@ -236,7 +266,6 @@ namespace API_C_Sharp.Controller
                 idsUserFriends.Add(friend.getId);
             }
 
-            // Adiciona a lista de IDs dos amigos ao JSON do usuário
             userJson["idFriends"] = idsUserFriends;
 
             return ResponseUtils.JsonSuccessResponse(userJson);

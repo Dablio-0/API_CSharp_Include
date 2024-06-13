@@ -12,16 +12,19 @@ namespace API_C_Sharp.Controller
         #region create comment
         public static Response create(Request request, Data data)
         {
+            /* Gets the current user id */
             int idAuthor = data.getCurrentUser();
 
             if (idAuthor == -1)
                 return ResponseUtils.Unauthorized("Não há usuários criados.");
 
+            /* Gets the Post is going to be commented */
             Post post = data.getPostById((int)request.routeParans["idPost"]);
 
             if (post == null)
                 return ResponseUtils.NotFound("Post não encontrado.");
 
+            /* Makes the body of the comment */
             JObject bodyCommentJson = (JObject)request.body.GetValue("bodyComment");
             BodyCommentContent bodyComment = new(
                 (string)bodyCommentJson.GetValue("text"),
@@ -30,12 +33,18 @@ namespace API_C_Sharp.Controller
                 (string)bodyCommentJson.GetValue("image")
             );
 
+            /** 
+             * Adds the comment to the global list of comments
+             * and adds the comment to the post comment list
+             */
+
             int commentId = data.addComment(idAuthor, post.getId, bodyComment);
 
             Comment commentCreated = data.getCommentById(commentId);
 
             post.getCommentList.Add(commentCreated);
 
+            /* Makes the response */
             return ResponseUtils.JsonSuccessResponse(JObject.Parse("{" +
                 "id:" + commentId + ", " +
                 "idAuthor: " + idAuthor + ", " +
@@ -47,6 +56,7 @@ namespace API_C_Sharp.Controller
         #region Update Comment
         public static Response update(Request request, Data data)
         {
+            /* Get the post and comment by id from the route */
             Post post = data.getPostById((int)request.routeParans["idPost"]);
             Comment comment = data.getCommentById((int)request.routeParans["idComment"]);
 
@@ -56,6 +66,11 @@ namespace API_C_Sharp.Controller
             if (comment == null)
                 return ResponseUtils.NotFound("Comentário não encontrado.");
 
+            /** 
+             * Search for the comment in the post comment list
+             * 
+             * If the comment is found, update the comment body and returns the edited comment
+             */
 
             foreach (Comment c in post.getCommentList)
             {
@@ -83,6 +98,7 @@ namespace API_C_Sharp.Controller
                 }
             }
 
+            /* If the comment is not found, return a not found response */
             return ResponseUtils.NotFound("Este comentário não existe na lista de comentários desse post.");
         }
         #endregion
@@ -90,6 +106,7 @@ namespace API_C_Sharp.Controller
         #region Delete Comment
         public static Response delete(Request request, Data data)
         {
+            /* Get the post and comment by id from the route */
             Post post = data.getPostById((int)request.routeParans["idPost"]);
             Comment comment = data.getCommentById((int)request.routeParans["idComment"]);
 
@@ -99,6 +116,7 @@ namespace API_C_Sharp.Controller
             if (comment == null)
                 return ResponseUtils.NotFound("Comentário não encontrado.");
 
+            /* Search for the comment in the post comment list to remove it */
             foreach (Comment c in post.getCommentList)
             {
                 if (c.getId == comment.getId)
@@ -108,7 +126,9 @@ namespace API_C_Sharp.Controller
                     return ResponseUtils.JsonSuccessResponse(JObject.Parse("{id:" + comment.getId + "}"));
                 }
             }
-            return ResponseUtils.NotFound("Comentário não encontrado.");
+
+            /* If the comment is not found, return a not found response */
+            return ResponseUtils.NotFound("Este comentário não existe na lista de comentários desse post.");
         }
         #endregion
 

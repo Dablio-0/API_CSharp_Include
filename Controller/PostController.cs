@@ -13,11 +13,17 @@ namespace API_C_Sharp.Controller
         #region Publish Post
         public static Response create(Request request, Data data)
         {
+            /* Gets the current user id */
             int idAuthor = data.getCurrentUser();
 
             if (idAuthor == -1)
                 return ResponseUtils.Unauthorized("Não há usuários criados.");
 
+            /** 
+             * After getting the current user id,
+             * 
+             * Makes the body of the post is going to be created
+             */
             string title = (string)request.body.GetValue("title");
 
             JObject bodyJson = (JObject)request.body.GetValue("body");
@@ -29,8 +35,10 @@ namespace API_C_Sharp.Controller
                 (string)bodyJson.GetValue("image")
             );
 
+            /* Adds the post to the global list of post */
             int postId = data.addPost(idAuthor, title, body);
 
+            /* Makes the response */
             return ResponseUtils.JsonSuccessResponse(JObject.Parse("{id:" + postId + ", idAuthor: " + idAuthor + " }"));
         }
         #endregion
@@ -38,11 +46,17 @@ namespace API_C_Sharp.Controller
         #region Update Post
         public static Response update(Request request, Data data)
         {
+            /* Get the post by id from the route */
             Post post = data.getPostById((int)request.routeParans["idPost"]);
 
             if (post == null)
                 return ResponseUtils.NotFound("Post não encontrado.");
 
+            /** 
+             * After getting the post id from the route,
+             * 
+             * Makes the body of the post is going to be created
+             */
             string title = (string)request.body.GetValue("title");
 
             JObject bodyJson = (JObject)request.body.GetValue("body");
@@ -65,10 +79,12 @@ namespace API_C_Sharp.Controller
                 post.setImageList = imagesList;
             }
 
+            /* Update the post */
             post.title = title;
             post.body = body;
             post.setUpdateDate = DateTime.Now;
 
+            /* Makes the response */
             return ResponseUtils.JsonSuccessResponse(new JObject(
                 new JProperty("id", post.getId),
                 new JProperty("idAuthor", post.getIdAuthor),
@@ -83,11 +99,13 @@ namespace API_C_Sharp.Controller
         #region Delete Post
         public static Response delete(Request request, Data data)
         {
+            /* Get the post by id from the route */
             Post post = data.getPostById((int)request.routeParans["idPost"]);
 
             if (post == null)
                 return ResponseUtils.NotFound("Post não encontrado.");
 
+            /* Delete on cascade firts the comments and then the post */
             foreach (Comment c in post.getCommentList)
             {
                 data.deleteComment(c.getId);
@@ -102,8 +120,7 @@ namespace API_C_Sharp.Controller
         #region Feed of Social Network
         public static Response feed(Request request, Data data)
         {
-            Console.WriteLine(data.getPosts());
-
+            /* Get the list of posts */
             JArray postList = new();
             foreach (Post post in data.getPosts())
                 postList.Add(post.serialize());
@@ -111,11 +128,12 @@ namespace API_C_Sharp.Controller
             if (postList.Count == 0)
                 return ResponseUtils.Conflict("Não há posts.");
 
-            // Reorder the list of posts to show the most recent first
+            // Reorder the list of posts to show the most recent first (Create the feed)
             JArray postListInverted = new();
             for (int i = postList.Count - 1; i >= 0; i--)
                 postListInverted.Add(postList[i]);
 
+            /* Makes the response */
             return ResponseUtils.JsonSuccessResponse(postListInverted);
         }
         #endregion
@@ -135,11 +153,13 @@ namespace API_C_Sharp.Controller
         #region List of Comments by Post
         public static Response getPostCommentList(Request request, Data data)
         {
+            /* Get the post by id from the route */
             Post post = data.getPostById((int)request.routeParans.GetValue("idPost"));
 
             if (post == null)
                 return ResponseUtils.NotFound("Post não encontrado.");
 
+            /* Get the list of comments by post */
             JArray commentListByPost = new();
             foreach (Comment comment in post.getCommentList)
                 commentListByPost.Add(comment.serialize());
@@ -147,6 +167,7 @@ namespace API_C_Sharp.Controller
             if (commentListByPost.Count == 0)
                 return ResponseUtils.NotFound("Não há comentários nesse post.");
 
+            /* Makes the response */
             return ResponseUtils.JsonSuccessResponse(commentListByPost);
         }
         #endregion
@@ -154,22 +175,35 @@ namespace API_C_Sharp.Controller
         #region Interaction
         public static Response like(Request request, Data data)
         {
+            /* Get the post by id from the route */
             Post post = data.getPostById((int)request.routeParans["idPost"]);
 
             if (post == null)
                 return ResponseUtils.NotFound("Post não encontrado.");
 
+            /* Get the current user */
             User user = data.getUserById(data.getCurrentUser());
 
             if (user == null)
                 return ResponseUtils.Unauthorized("Usuário não encontrado.");
 
+            /** 
+             * Get the status of the like from the body
+             * 
+             * If the status is true, the user will like the post
+             * If the status is false, the user will dislike the post
+             */
             string statusLikeString = (string)request.body.GetValue("statusLike");
             bool statusLike = false;
             bool.TryParse(statusLikeString, out statusLike);
 
             if (statusLike)
             {
+                /**
+                 * If the user already liked the post (your id inside on array), return a conflict response
+                 * 
+                 * If not, add the like to the post and the userId to the array of user ids that liked the post
+                 */
                 if (post.getLikesIdUser.Contains(user.getId))
                     return ResponseUtils.Conflict("Você já curtiu esse post.");
 
@@ -182,6 +216,12 @@ namespace API_C_Sharp.Controller
             }
             else
             {
+
+                /**
+                 * If not liked post yet (your id not inside on array), but trying to dislike, return a conflict response
+                 * 
+                 * If liked, remove the like from the post and the userId from the array of user ids that liked the post
+                 */
                 if (!post.getLikesIdUser.Contains(user.getId))
                     return ResponseUtils.Conflict("Não é possível tirar o like duas vezes ou você não deu like ainda.");
 

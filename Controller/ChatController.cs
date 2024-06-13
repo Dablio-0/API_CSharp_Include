@@ -19,16 +19,24 @@ namespace API_C_Sharp.Controller
         #region Send Message
         public static Response sendMessage(Request request, Data data)
         {
+            /* Gets the friendship by id */
             Friendship friendship = data.getFriendshipById((int)request.routeParans["idFriendship"]);
 
             if (friendship == null)
                 return ResponseUtils.NotFound("Relacionamento não encontrado.");
 
+            /* Gets the current user */
             User currentUser = data.getUserById(data.getCurrentUser());
 
             if (currentUser == null)
                 return ResponseUtils.Unauthorized("Não há usuário ativo na sessão.");
 
+            /** 
+             * Gets the user that is going to receive the message
+             * 
+             * If the user is the inviter, the user received is the invited
+             * If the user is the invited, the user received is the inviter
+             */
             User userReceived = null;
             if (friendship.getIdInviter == currentUser.getId)
             {
@@ -43,7 +51,7 @@ namespace API_C_Sharp.Controller
                 return ResponseUtils.Conflict("Usuário não faz parte deste relacionamento.");
             }
 
-            // Verifica o status da amizade
+            /* Checks if the friendship is pending, declined, blocked or terminated */
             if (friendship.getStatus.Equals(FriendshipStatus.pending) ||
                 friendship.getStatus.Equals(FriendshipStatus.declined) ||
                 friendship.getStatus.Equals(FriendshipStatus.blocked))
@@ -51,7 +59,7 @@ namespace API_C_Sharp.Controller
                 return ResponseUtils.Conflict("Você não pode enviar mensagens para um relacionamento pendente, recusado, bloqueado ou terminado.");
             }
 
-            // Obtém o corpo da mensagem a partir da requisição
+            /* Gets the body of the message */
             JObject bodyMessageJson = (JObject)request.body.GetValue("bodyMessage");
 
             BodyMessage bodyMessage = new(
@@ -60,11 +68,12 @@ namespace API_C_Sharp.Controller
                 (string)bodyMessageJson.GetValue("language")
             );
 
-            // Adiciona a mensagem no chat
+            /* Adds the message to the global list of messages */
             int messageId = data.addMessage(friendship.getId, currentUser.getId, userReceived.getId, bodyMessage);
 
             Message messageAdded = data.getMessageById(messageId);
 
+            /* Makes the response */
             return ResponseUtils.JsonSuccessResponse(new JObject(
                 new JProperty("id", messageId),
                 new JProperty("idChatFriendship", friendship.getId),
@@ -79,11 +88,13 @@ namespace API_C_Sharp.Controller
         #region Edit Message
         public static Response editMessage(Request request, Data data)
         {
+            /* Gets the friendship by id */
             Friendship friendship = data.getFriendshipById((int)request.routeParans["idFriendship"]);
 
             if (friendship == null)
                 return ResponseUtils.NotFound("Relacionamento não encontrado.");
 
+            /* Checks if the friendship is pending, declined, blocked or terminated */
             if (friendship.getStatus.Equals(FriendshipStatus.pending) ||
                 friendship.getStatus.Equals(FriendshipStatus.declined) ||
                 friendship.getStatus.Equals(FriendshipStatus.blocked))
@@ -91,17 +102,19 @@ namespace API_C_Sharp.Controller
                 return ResponseUtils.Conflict("Você não pode editar mensagens em um relacionamento pendente, recusado, bloqueado ou terminado.");
             }
 
+            /* Gets the message by id */
             Message message = data.getMessageById((int)request.routeParans["idMessage"]);
 
             if (message == null)
                 return ResponseUtils.NotFound("Mensagem não encontrada.");
 
-            //alterar para pegar da lista geral
-
+            /* Gets the current user */
             User currentUser = data.getUserById(data.getCurrentUser());
 
+            /* Gets all messages from the current user */
             List<Message> userMessages = data.getMessagesByUser(currentUser.getId);
 
+            /* Checks if the message is from the current user */
             foreach (Message m in userMessages)
             {
                 if (m.getId == message.getId)
@@ -116,6 +129,7 @@ namespace API_C_Sharp.Controller
                     message.bodyMessage = bodyMessage;
                     message.setUpdateDate = DateTime.Now;
 
+                    /* Makes the response */
                     return ResponseUtils.JsonSuccessResponse(new JObject(
                         new JProperty("id", message.getId),
                         new JProperty("idChatFriendship", friendship.getId),
@@ -135,11 +149,13 @@ namespace API_C_Sharp.Controller
         #region Delete Message
         public static Response deleteMessage(Request request, Data data)
         {
+            /* Gets the friendship by id */
             Friendship friendship = data.getFriendshipById((int)request.routeParans["idFriendship"]);
 
             if (friendship == null)
                 return ResponseUtils.NotFound("Relacionamento não encontrado.");
 
+            /* Checks if the friendship is pending, declined, blocked or terminated */
             if (friendship.getStatus.Equals(FriendshipStatus.pending) ||
                 friendship.getStatus.Equals(FriendshipStatus.declined) ||
                 friendship.getStatus.Equals(FriendshipStatus.blocked))
@@ -147,22 +163,25 @@ namespace API_C_Sharp.Controller
                 return ResponseUtils.Conflict("Você não pode deletar mensagens em um relacionamento pendente, recusado, bloqueado ou terminado.");
             }
 
+            /* Gets the message by id */
             Message message = data.getMessageById((int)request.routeParans["idMesssage"]);
 
             if (message == null)
                 return ResponseUtils.NotFound("Mensagem não encontrado.");
 
-            // alterar para pegar da lista geral
-
+            /* Gets the current user */
             User currentUser = data.getUserById(data.getCurrentUser());
 
+            /* Gets all messages from the current user */
             List<Message> userMessages = data.getMessagesByUser(currentUser.getId);
             foreach (Message m in userMessages)
             {
                 if (m.getId == message.getId)
                 {
+                    /* Deletes the message in global list from data class */
                     data.deleteMessage(m.getId);
 
+                    /* Makes the response */
                     return ResponseUtils.JsonSuccessResponse(JObject.Parse("{id:" + message.getId + "}"));
                 }
             }
@@ -173,40 +192,44 @@ namespace API_C_Sharp.Controller
         #region List Messages (All Chat)
         public static Response listMessages(Request request, Data data)
         {
-            // Obtém a amizade pelo ID
+            /* Gets the friendship by id */
             Friendship friendship = data.getFriendshipById((int)request.routeParans["idFriendship"]);
 
             if (friendship == null)
                 return ResponseUtils.NotFound("Relacionamento não encontrado.");
 
-            // Obtém o usuário atual da sessão
+            /* Gets the current user */
             User currentUser = data.getUserById(data.getCurrentUser());
 
             if (currentUser == null)
                 return ResponseUtils.Unauthorized("Não há usuário ativo na sessão.");
 
-            // Obtém o amigo a partir do ID do parâmetro da rota
+            /* Gets the user friend */
             User userFriend = data.getUserById((int)request.routeParans["idUserFriend"]);
 
             if (userFriend == null)
                 return ResponseUtils.NotFound("Usuário não encontrado.");
 
-            // Verifica se ambos os usuários fazem parte da amizade
+            /* Checks if the both users are friends */
             if (!((friendship.getIdInviter == currentUser.getId && friendship.getIdInvited == userFriend.getId) ||
                   (friendship.getIdInviter == userFriend.getId && friendship.getIdInvited == currentUser.getId)))
             {
                 return ResponseUtils.Conflict("Usuários não são amigos.");
             }
 
-            // Obtém todas as mensagens do usuário logado
+            /* Gets all messages from the current user */
             List<Message> userMessages = data.getMessagesByUser(currentUser.getId);
 
-            // Filtra as mensagens que envolvem o amigo especificado
+            /* Gets all messages from the user friend, both sent and received in this friendship */
             List<Message> relevantMessages = userMessages
                 .Where(m => (m.getIdAuthorMessage == currentUser.getId && m.getIdUserReceived == userFriend.getId) ||
                             (m.getIdAuthorMessage == userFriend.getId && m.getIdUserReceived == currentUser.getId))
                 .ToList();
 
+            /** If this chat is empty, returns a message 
+             *
+             * If not, returns the list of messages
+             */
             if (relevantMessages == null || relevantMessages.Count == 0)
                 return ResponseUtils.NotFound("Chat vazio.");
 
@@ -214,6 +237,7 @@ namespace API_C_Sharp.Controller
             foreach (Message message in relevantMessages)
                 messageList.Add(message.serialize());
 
+            /* Makes the response */
             return ResponseUtils.JsonSuccessResponse(messageList);
         }
         #endregion
