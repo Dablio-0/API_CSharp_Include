@@ -9,11 +9,13 @@ namespace API_C_Sharp.Utils
 {
     public class Password
     {
+        #region Regex Password
         public static bool IsValid(string password)
         {
             string pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,15}$";
 
             return Regex.IsMatch(password, pattern);
         }
+        #endregion
     }
 }

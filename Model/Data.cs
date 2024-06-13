@@ -1,32 +1,35 @@
 
 using API_C_Sharp.Model.Post;
 using API_C_Sharp.Model.User;
+using API_C_Sharp.Model.User.Chat;
+using API_C_Sharp.Utils;
 using System.Security.Cryptography.X509Certificates;
 
 namespace API_C_Sharp.Model
 {
     public class Data
     {
+        #region Global Attributes
         private List<User.User> usersList;
-        private List<Friendship> friendshipsList;
         private List<Post.Post> postsList;
+        private List<Friendship> friendshipsList;
         private List<Comment> commentsList;
+        private List<Message> messageList;
         private int currentUser = -1;
+        private int messagesId;
+        #endregion
 
+        #region Constructor
         public Data()
         {
             usersList = new();
             friendshipsList = new();
             postsList = new();
             commentsList = new();
+            messageList = new();
+            messagesId = 0;
         }
-
-        public void alimentaAi()
-        {
-            this.addUser("Usu�rio 1", "usuario1@gmail.com", "123");
-            this.addUser("Usu�rio 2", "usuario2@gmail.com", "123");
-            this.addUser("Usu�rio 3", "usuario3@gmail.com", "123");
-        }
+        #endregion
 
         #region Data Users Methods
         public List<User.User> getUsers()
@@ -63,6 +66,11 @@ namespace API_C_Sharp.Model
             }
         }
 
+        public void removeUser(int id)
+        {
+            usersList.Remove(this.getUserById(id));
+        }
+
         public void login(int userId)
         {
             this.currentUser = userId;
@@ -72,6 +80,129 @@ namespace API_C_Sharp.Model
         {
             this.currentUser = -1;
         }
+        #endregion
+
+        #region Data Friendship Methods
+        public int addFrienship(int idInviter, int userInvited, FriendshipStatus status)
+        {
+            int ID = friendshipsList.Count();
+
+            ID = friendshipsList.Count() > 0 ? friendshipsList.Max(p => p.getId) + 1 : 0;
+
+            friendshipsList.Add(new Friendship(ID, idInviter, userInvited, status));
+
+            return ID;
+        }
+
+        public void deleteFriendship(int id)
+        {
+            friendshipsList.Remove(this.getFriendshipById(id));
+        }
+
+        public Friendship modifyFriendshipStatus(int idFriendship, FriendshipStatus status)
+        {
+            // Obtém a amizade pelo ID
+            Friendship friendship = this.getFriendshipById(idFriendship);
+
+            // Verifica se a amizade existe
+            if (friendship == null)
+            {
+                throw new Exception("A amizade não foi encontrada.");
+            }
+
+            // Atualiza o status da amizade
+            friendship.setStatus = status;
+
+            // Retorna a amizade atualizada
+            return friendship;
+        }
+
+        public List<Friendship> getFriendships()
+        {
+            return friendshipsList;
+        }
+
+        public Friendship getFriendshipById(int id)
+        {
+            return friendshipsList.Find(friendship => friendship.getId == id);
+        }
+
+        public List<User.User> getListNotFriends(User.User invitedUser)
+        {
+            List<User.User> notFriends = new List<User.User>();
+
+            foreach (User.User user in usersList)
+            {
+                if (!user.getFriends.Contains(invitedUser) && user.getId != invitedUser.getId)
+                {
+                    notFriends.Add(user);
+                }
+            }
+
+            return notFriends;
+        }
+
+
+        public List<Friendship> getFriendshipsPending()
+        {
+            return friendshipsList.FindAll(friendshipsList => friendshipsList.getStatus == FriendshipStatus.pending);
+        }
+
+        public List<Friendship> getFriendshipsAccepted()
+        {
+            return friendshipsList.FindAll(friendshipsList => friendshipsList.getStatus == FriendshipStatus.accepted);
+        }
+
+        public List<Friendship> getFriendshipsDeclined()
+        {
+            return friendshipsList.FindAll(friendshipsList => friendshipsList.getStatus == FriendshipStatus.declined);
+        }
+        #endregion
+
+        #region Data Meessage Methods
+        public int addMessage(int idChatFriendshp, int idAuthorMessage, int idUserReceiced, BodyMessage bodyMessage)
+        {
+            int ID = this.messagesId++;
+
+            Console.WriteLine("1o-controle" + ID);
+
+            this.messageList.Add(new Message(ID, idChatFriendshp, idAuthorMessage, idUserReceiced, bodyMessage));
+
+            foreach (Message message in messageList)
+            {
+                Console.WriteLine(message.getId);
+            }
+            Console.WriteLine("---------------------------------");
+            return ID;
+        }
+
+        public void deleteMessage(int id)
+        {
+            messageList.Remove(this.getMessageById(id));
+        }
+
+        public Message getMessageById(int id)
+        {
+            return messageList.Find(message => message.getId == id);
+        }
+
+        public List<Message> getMessagesByUser(int id)
+        {
+            User.User user = this.getUserById(id);
+
+            List<Message> userMessages = new();
+
+            foreach (Message m in messageList)
+            {
+                if (user.getId == m.getIdAuthorMessage || user.getId == m.getIdUserReceived)
+                {
+                    userMessages.Add(m);
+                }
+            }
+
+            return userMessages;
+        }
+
         #endregion
 
         #region Data Post Methods
@@ -99,7 +230,9 @@ namespace API_C_Sharp.Model
         public int addPost(int idAuthor, string title, BodyContent body)
         {
             int ID = postsList.Count();
-
+            Console.WriteLine(ID + " seila");
+            ID = postsList.Count() > 0 ? postsList.Max(p => p.getId) + 1 : 0;
+            Console.WriteLine(ID + " oi");
             postsList.Add(new Post.Post(ID, idAuthor, title, body));
 
             return ID;
@@ -128,11 +261,16 @@ namespace API_C_Sharp.Model
         #region Data Comment Methods
         public int addComment(int idAuthor, int idPost, BodyCommentContent bodyComment)
         {
-            int ID = commentsList.Count();
+            int ID = commentsList.Count() > 0 ? commentsList.Max(p => p.getId) + 1 : 0;
 
             commentsList.Add(new Comment(ID, idAuthor, idPost, bodyComment));
 
             return ID;
+        }
+
+        public void deleteComment(int id)
+        {
+            commentsList.Remove(this.getCommentById(id));
         }
 
         public List<Comment> getAllComments()
@@ -147,11 +285,6 @@ namespace API_C_Sharp.Model
             commentsList.FindAll(comment => comment.getIdPost == idPost);
 
             return commentsListByPost;
-        }
-
-        public void deleteComment(int id)
-        {
-            commentsList.Remove(getCommentById(id));
         }
 
         public Comment getCommentById(int id)

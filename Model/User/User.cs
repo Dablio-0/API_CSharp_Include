@@ -88,7 +88,7 @@ namespace API_C_Sharp.Model.User
         #region Serialization for JSON
         public JObject serialize()
         {
-            JObject json = new JObject();
+            JObject json = new();
 
             json["id"] = id;
             json["name"] = name;
