@@ -6,7 +6,7 @@ namespace API_C_Sharp.Utils
 {
     class ResponseUtils
     {
-
+        #region Responses
         public static Response JsonSuccessResponse(JObject content)
         {
             var response = new JObject();
@@ -50,7 +50,6 @@ namespace API_C_Sharp.Utils
         {
             return Error(message, HttpStatusCode.NotFound);
         }
-
-
+        #endregion
     }
 }

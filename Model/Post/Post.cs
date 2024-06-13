@@ -95,13 +95,6 @@ namespace API_C_Sharp.Model.Post
             json["author"] = idAuthor;
             json["title"] = title;
 
-            //XElement bodyElement = new XElement("body");
-            //foreach (PropertyInfo property in body.GetType().GetProperties())
-            //    bodyElement.Add(new XElement(property.Name, property.GetValue(body)));
-
-            //json["body"] = bodyElement.ToString();
-
-
             /* Body Element */
             JObject bodyJson = new();
             bodyJson["text"] = body.text;

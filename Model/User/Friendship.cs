@@ -2,56 +2,61 @@
 
 namespace API_C_Sharp.Model.User
 {
+    #region Status for a Friendship (enum class)
     public enum FriendshipStatus
     {
         pending,
         accepted,
-        declined
+        declined,
+        blocked
     }
+    #endregion
 
     public class Friendship
     {
-
-        private int inviter;
-        private int invited;
+        #region Attributes
+        private int id;
+        private int idInviter;
+        private int idInvited;
         public FriendshipStatus status;
-        private Chat chat;
+        #endregion
 
-        public Friendship(int inviter, int invited, FriendshipStatus status, Chat chat)
+        #region Constructor
+        public Friendship(int id, int idInviter, int idInvited, FriendshipStatus status)
         {
-            this.inviter = inviter;
-            this.invited = invited;
+            this.id = id;
+            this.idInviter = idInviter;
+            this.idInvited = idInvited;
             this.status = FriendshipStatus.pending;
-            this.chat = chat;
         }
+        #endregion
 
-        public int getInviter { get { return inviter; } }
+        #region Gets e Sets
+        public int getId { get { return id; } }
 
-        public int setInviter { set { setInviter = value; } }
+        public int setId { set { id = value; } }
 
-        public int getInvited { get { return invited; } }
+        public int getIdInviter { get { return idInviter; } }
 
-        public int setInvited { set { invited = value; } }
+        public int setIdInviter { set { idInviter = value; } }
+
+        public int getIdInvited { get { return idInvited; } }
+
+        public int setIdInvited { set { idInvited = value; } }
 
         public FriendshipStatus getStatus { get { return status; } }
 
         public FriendshipStatus setStatus { set { status = value; } }
-
-        public Boolean End() { return true; }
-
-        public Boolean check(int inviter, int invited) { return true; }
-
-        public Chat Chat { get { return chat; } }
+        #endregion 
 
         #region Serialization for JSON
         public JObject serialize()
         {
             JObject json = new JObject();
 
-            json["inviter"] = inviter;
-            json["invited"] = invited;
+            json["inviter"] = idInviter;
+            json["invited"] = idInvited;
             json["status"] = status.ToString();
-            json["chat"] = null;
 
             return json;
         }
