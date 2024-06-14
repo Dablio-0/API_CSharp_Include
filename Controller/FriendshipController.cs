@@ -1,15 +1,8 @@
 ﻿using API_C_Sharp.LSharp.HTTP;
 using API_C_Sharp.Model;
 using API_C_Sharp.Model.User;
-using API_C_Sharp.Model.User.Chat;
 using API_C_Sharp.Utils;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace API_C_Sharp.Controller
 {
@@ -30,7 +23,7 @@ namespace API_C_Sharp.Controller
             /* Verifies if the logged in user is already a friend of the invited user */
             if (userInvited.getFriends.Any(friend => friend.getId == idInviter))
                 return ResponseUtils.Conflict("Você já é amigo desse usuário.");
-            
+
             /* Verifies if there is already a pending friendship between the logged in user and the invited user */
             bool inviteExists = data.getFriendshipsPending()
                                     .Any(f => f.getIdInviter == idInviter && f.getIdInvited == userInvited.getId);
@@ -116,7 +109,7 @@ namespace API_C_Sharp.Controller
                 /* If the friendship is not declined, the status is changed to declined */
                 friendship.setStatus = FriendshipStatus.declined;
             }
-            
+
             /* Make the JSON response */
             JObject JsonResponse = new JObject
             {
@@ -242,33 +235,28 @@ namespace API_C_Sharp.Controller
         #region List of Friends by User
         public static Response listFriendsByUser(Request request, Data data)
         {
-            /* Get the user by the ID of the route parameter */
-            User user = data.getUserById((int)request.routeParans["idUser"]);
+            int userId = (int)request.routeParans["idUser"];
 
-            if (user == null)
-                return ResponseUtils.NotFound("Usuário não encontrado.");
+            List<Friendship> friendships = data.getFriendshipsAccepted().FindAll((Friendship friendship) => friendship.getIdInviter == userId || friendship.getIdInvited == userId);
 
-            /* Get the list of friends of the user */
-            List<User> friendsList = user.getFriends;
+            JArray friendList = new();
 
-            /* Make the Json with a active user information and the list of friends with their IDs */
-            JObject userJson = new JObject
+            foreach (Friendship friendship in friendships)
             {
-                ["id"] = user.getId,
-                ["name"] = user.getName,
-                ["email"] = user.getEmail
-            };
+                User user;
+                if (friendship.getIdInviter == userId)
+                    user = data.getUserById(friendship.getIdInvited);
+                else
+                    user = data.getUserById(friendship.getIdInviter);
 
-            JArray idsUserFriends = new JArray();
+                JObject userJson = user.serialize();
 
-            foreach (User friend in friendsList)
-            {
-                idsUserFriends.Add(friend.getId);
+                userJson["friendshipId"] = friendship.getId;
+
+                friendList.Add(userJson);
             }
 
-            userJson["idFriends"] = idsUserFriends;
-
-            return ResponseUtils.JsonSuccessResponse(userJson);
+            return ResponseUtils.JsonSuccessResponse(friendList);
         }
         #endregion
     }

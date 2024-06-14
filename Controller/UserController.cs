@@ -87,7 +87,7 @@ namespace API_C_Sharp.Controller
         public static Response update(Request request, Data data)
         {
             /* Get the user by id from the route */
-            User user = data.getUserById((int)request.routeParans.GetValue("id"));
+            User user = data.getUserById(data.getCurrentUser());
 
             if (user == null)
                 return ResponseUtils.NotFound("Usuario não existe.");
@@ -98,14 +98,6 @@ namespace API_C_Sharp.Controller
 
             string name = (string)request.body.GetValue("name");
             string email = (string)request.body.GetValue("email");
-
-            if (!Email.IsValid(email))
-                return ResponseUtils.Unauthorized("Email inválido.");
-
-            string password = (string)request.body.GetValue("password");
-
-            if (!Password.IsValid(password))
-                return ResponseUtils.Unauthorized("Senha inválida.");
 
             string imageIconProfile = (string)request.body.GetValue("imageIconProfile");
 
@@ -126,7 +118,6 @@ namespace API_C_Sharp.Controller
             /* Set new values */
             user.setName = name;
             user.setEmail = email;
-            user.setPassword = password;
             user.setImageIconProfile = imageIconProfile;
             user.setBirthDate = birthDate;
             user.setSkills = skillsList;

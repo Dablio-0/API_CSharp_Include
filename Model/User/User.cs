@@ -115,11 +115,11 @@ namespace API_C_Sharp.Model.User
 
             json["notifications"] = notificationList;
 
-            JArray friendsList = new JArray();
-            foreach (User user in users)
-                friendsList.Add(user.serialize());
+            //JArray friendsList = new JArray();
+            //foreach (User user in users)
+            //    friendsList.Add(user.serialize());
 
-            json["friends"] = friendsList;
+            //json["friends"] = friendsList;
 
             json["status"] = status;
 

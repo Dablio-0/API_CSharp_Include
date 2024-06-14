@@ -1,33 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\welia\\source\\repos\\FATEC\\IncludeApp\\API_CSharp_Include\\API_C_Sharp.csproj": {}
+    "C:\\Users\\lukin\\OneDrive\\Área de Trabalho\\API_CSharp_Include\\API_C_Sharp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\welia\\source\\repos\\FATEC\\IncludeApp\\API_CSharp_Include\\API_C_Sharp.csproj": {
+    "C:\\Users\\lukin\\OneDrive\\Área de Trabalho\\API_CSharp_Include\\API_C_Sharp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\welia\\source\\repos\\FATEC\\IncludeApp\\API_CSharp_Include\\API_C_Sharp.csproj",
+        "projectUniqueName": "C:\\Users\\lukin\\OneDrive\\Área de Trabalho\\API_CSharp_Include\\API_C_Sharp.csproj",
         "projectName": "API_C_Sharp",
-        "projectPath": "C:\\Users\\welia\\source\\repos\\FATEC\\IncludeApp\\API_CSharp_Include\\API_C_Sharp.csproj",
-        "packagesPath": "C:\\Users\\welia\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\welia\\source\\repos\\FATEC\\IncludeApp\\API_CSharp_Include\\obj\\",
+        "projectPath": "C:\\Users\\lukin\\OneDrive\\Área de Trabalho\\API_CSharp_Include\\API_C_Sharp.csproj",
+        "packagesPath": "C:\\Users\\lukin\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\lukin\\OneDrive\\Área de Trabalho\\API_CSharp_Include\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\welia\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\lukin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {}
         },
         "frameworks": {
           "net8.0": {
@@ -71,7 +65,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

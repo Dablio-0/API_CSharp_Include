@@ -36,3 +36,38 @@ C:\Users\welia\source\repos\FATEC\IncludeApp\API_CSharp_Include\obj\Debug\net8.0
 C:\Users\welia\source\repos\FATEC\IncludeApp\API_CSharp_Include\obj\Debug\net8.0\API_C_Sharp.pdb
 C:\Users\welia\source\repos\FATEC\IncludeApp\API_CSharp_Include\obj\Debug\net8.0\API_C_Sharp.genruntimeconfig.cache
 C:\Users\welia\source\repos\FATEC\IncludeApp\API_CSharp_Include\obj\Debug\net8.0\ref\API_C_Sharp.dll
+L:\Programas\API_CSharp_Include-main\API_CSharp_Include-main\bin\Debug\net8.0\API_C_Sharp.exe
+L:\Programas\API_CSharp_Include-main\API_CSharp_Include-main\bin\Debug\net8.0\API_C_Sharp.deps.json
+L:\Programas\API_CSharp_Include-main\API_CSharp_Include-main\bin\Debug\net8.0\API_C_Sharp.runtimeconfig.json
+L:\Programas\API_CSharp_Include-main\API_CSharp_Include-main\bin\Debug\net8.0\API_C_Sharp.dll
+L:\Programas\API_CSharp_Include-main\API_CSharp_Include-main\bin\Debug\net8.0\API_C_Sharp.pdb
+L:\Programas\API_CSharp_Include-main\API_CSharp_Include-main\bin\Debug\net8.0\Newtonsoft.Json.dll
+L:\Programas\API_CSharp_Include-main\API_CSharp_Include-main\obj\Debug\net8.0\API_C_Sharp.csproj.AssemblyReference.cache
+L:\Programas\API_CSharp_Include-main\API_CSharp_Include-main\obj\Debug\net8.0\API_C_Sharp.GeneratedMSBuildEditorConfig.editorconfig
+L:\Programas\API_CSharp_Include-main\API_CSharp_Include-main\obj\Debug\net8.0\API_C_Sharp.AssemblyInfoInputs.cache
+L:\Programas\API_CSharp_Include-main\API_CSharp_Include-main\obj\Debug\net8.0\API_C_Sharp.AssemblyInfo.cs
+L:\Programas\API_CSharp_Include-main\API_CSharp_Include-main\obj\Debug\net8.0\API_C_Sharp.csproj.CoreCompileInputs.cache
+L:\Programas\API_CSharp_Include-main\API_CSharp_Include-main\obj\Debug\net8.0\API_C_Sh.813D2742.Up2Date
+L:\Programas\API_CSharp_Include-main\API_CSharp_Include-main\obj\Debug\net8.0\API_C_Sharp.dll
+L:\Programas\API_CSharp_Include-main\API_CSharp_Include-main\obj\Debug\net8.0\refint\API_C_Sharp.dll
+L:\Programas\API_CSharp_Include-main\API_CSharp_Include-main\obj\Debug\net8.0\API_C_Sharp.pdb
+L:\Programas\API_CSharp_Include-main\API_CSharp_Include-main\obj\Debug\net8.0\API_C_Sharp.genruntimeconfig.cache
+L:\Programas\API_CSharp_Include-main\API_CSharp_Include-main\obj\Debug\net8.0\ref\API_C_Sharp.dll
+C:\Users\lukin\OneDrive\Área de Trabalho\API_CSharp_Include\bin\Debug\net8.0\API_C_Sharp.exe
+C:\Users\lukin\OneDrive\Área de Trabalho\API_CSharp_Include\bin\Debug\net8.0\API_C_Sharp.deps.json
+C:\Users\lukin\OneDrive\Área de Trabalho\API_CSharp_Include\bin\Debug\net8.0\API_C_Sharp.runtimeconfig.json
+C:\Users\lukin\OneDrive\Área de Trabalho\API_CSharp_Include\bin\Debug\net8.0\API_C_Sharp.dll
+C:\Users\lukin\OneDrive\Área de Trabalho\API_CSharp_Include\bin\Debug\net8.0\API_C_Sharp.pdb
+C:\Users\lukin\OneDrive\Área de Trabalho\API_CSharp_Include\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\lukin\OneDrive\Área de Trabalho\API_CSharp_Include\obj\Debug\net8.0\API_C_Sharp.csproj.AssemblyReference.cache
+C:\Users\lukin\OneDrive\Área de Trabalho\API_CSharp_Include\obj\Debug\net8.0\API_C_Sharp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\lukin\OneDrive\Área de Trabalho\API_CSharp_Include\obj\Debug\net8.0\API_C_Sharp.AssemblyInfoInputs.cache
+C:\Users\lukin\OneDrive\Área de Trabalho\API_CSharp_Include\obj\Debug\net8.0\API_C_Sharp.AssemblyInfo.cs
+C:\Users\lukin\OneDrive\Área de Trabalho\API_CSharp_Include\obj\Debug\net8.0\API_C_Sharp.csproj.CoreCompileInputs.cache
+C:\Users\lukin\OneDrive\Área de Trabalho\API_CSharp_Include\obj\Debug\net8.0\API_C_Sharp.sourcelink.json
+C:\Users\lukin\OneDrive\Área de Trabalho\API_CSharp_Include\obj\Debug\net8.0\API_C_Sh.813D2742.Up2Date
+C:\Users\lukin\OneDrive\Área de Trabalho\API_CSharp_Include\obj\Debug\net8.0\API_C_Sharp.dll
+C:\Users\lukin\OneDrive\Área de Trabalho\API_CSharp_Include\obj\Debug\net8.0\refint\API_C_Sharp.dll
+C:\Users\lukin\OneDrive\Área de Trabalho\API_CSharp_Include\obj\Debug\net8.0\API_C_Sharp.pdb
+C:\Users\lukin\OneDrive\Área de Trabalho\API_CSharp_Include\obj\Debug\net8.0\API_C_Sharp.genruntimeconfig.cache
+C:\Users\lukin\OneDrive\Área de Trabalho\API_CSharp_Include\obj\Debug\net8.0\ref\API_C_Sharp.dll
